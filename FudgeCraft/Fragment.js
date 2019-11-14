@@ -33,4 +33,4 @@ var FudgeCraft;
     Fragment.shapes = Fragment.getShapeArray();
     FudgeCraft.Fragment = Fragment;
 })(FudgeCraft || (FudgeCraft = {}));
-//# sourceMappingURL=Fragments.js.map
+//# sourceMappingURL=Fragment.js.map
