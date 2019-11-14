@@ -1,35 +1,28 @@
-namespace FudgeCraft {
-    import f = FudgeCore;
-
-    export enum CUBE_TYPE {
-        GREEN = "Green",
-        RED = "Red",
-        BLUE = "Blue",
-        YELLOW = "Yellow",
-        MAGENTA = "Magenta",
-        CYAN = "Cyan"
-    }
-    type Materials = Map<CUBE_TYPE, f.Material>;
-
-    export class Cube extends f.Node {
-        private static mesh: f.MeshCube = new f.MeshCube();
-        private static materials: Materials = Cube.createMaterials();
-
-        constructor(_type: CUBE_TYPE, _position: f.Vector3) {
+"use strict";
+var FudgeCraft;
+(function (FudgeCraft) {
+    var f = FudgeCore;
+    let CUBE_TYPE;
+    (function (CUBE_TYPE) {
+        CUBE_TYPE["GREEN"] = "Green";
+        CUBE_TYPE["RED"] = "Red";
+        CUBE_TYPE["BLUE"] = "Blue";
+        CUBE_TYPE["YELLOW"] = "Yellow";
+        CUBE_TYPE["MAGENTA"] = "Magenta";
+        CUBE_TYPE["CYAN"] = "Cyan";
+    })(CUBE_TYPE = FudgeCraft.CUBE_TYPE || (FudgeCraft.CUBE_TYPE = {}));
+    class Cube extends f.Node {
+        constructor(_type, _position) {
             super("Cube");
-
-            let cmpMesh: f.ComponentMesh = new f.ComponentMesh(Cube.mesh);
+            let cmpMesh = new f.ComponentMesh(Cube.mesh);
             this.addComponent(cmpMesh);
-
-            let cmpMaterial: f.ComponentMaterial = new f.ComponentMaterial(Cube.materials.get(_type));
+            let cmpMaterial = new f.ComponentMaterial(Cube.materials.get(_type));
             this.addComponent(cmpMaterial);
-
-            let cmpTransform: f.ComponentTransform = new f.ComponentTransform(f.Matrix4x4.TRANSLATION(_position));
+            let cmpTransform = new f.ComponentTransform(f.Matrix4x4.TRANSLATION(_position));
             cmpTransform.local.scale(f.Vector3.ONE(0.9));
             this.addComponent(cmpTransform);
         }
-
-        private static createMaterials(): Materials {
+        static createMaterials() {
             return new Map([
                 [CUBE_TYPE.RED, new f.Material(CUBE_TYPE.RED, f.ShaderFlat, new f.CoatColored(f.Color.RED))],
                 [CUBE_TYPE.GREEN, new f.Material(CUBE_TYPE.GREEN, f.ShaderFlat, new f.CoatColored(f.Color.GREEN))],
@@ -40,4 +33,8 @@ namespace FudgeCraft {
             ]);
         }
     }
-}
+    Cube.mesh = new f.MeshCube();
+    Cube.materials = Cube.createMaterials();
+    FudgeCraft.Cube = Cube;
+})(FudgeCraft || (FudgeCraft = {}));
+//# sourceMappingURL=Cube.js.map

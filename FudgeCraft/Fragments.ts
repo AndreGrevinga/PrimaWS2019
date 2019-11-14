@@ -1,4 +1,4 @@
-namespace L07_FudgeCraft_Fragments {
+namespace FudgeCraft {
     import f = FudgeCore;
 
     export class Fragment extends f.Node {
