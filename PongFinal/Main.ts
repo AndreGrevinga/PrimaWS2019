@@ -138,7 +138,7 @@ namespace L02_FirstFudge {
 
         wallTop = createNode("WallTop", meshQuad, mtrSolidWhite, new f.Vector2(0, 15), new f.Vector2(45, 1));
         wallBottom = createNode("WallBottom", meshQuad, mtrSolidWhite, new f.Vector2(0, -15), new f.Vector2(45, 1));
-        ball = createNode("Ball", meshQuad, mtrSolidWhite, f.Vector2.ZERO, new f.Vector2(1, 1));
+        ball = createNode("Ball", meshQuad, mtrSolidWhite, new f.Vector2(0, 0), new f.Vector2(1, 1));
         paddleLeft = createNode("PaddleLeft", meshQuad, mtrSolidWhite, new f.Vector2(-20, 0), new f.Vector2(1, 4));
         paddleRight = createNode("PaddleRight", meshQuad, mtrSolidWhite, new f.Vector2(20, 0), new f.Vector2(1, 4));
 
