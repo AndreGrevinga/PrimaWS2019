@@ -1,15 +1,18 @@
 namespace FudgeCraft {
     import f = FudgeCore;
 
-    window.addEventListener("load", hndLoad);
     let viewport: f.Viewport;
     let game: f.Node;
     let rotate: f.Vector3 = f.Vector3.ZERO();
     let translate: f.Vector3 = f.Vector3.ZERO();
     let fallspeed: number = 2;
-    let gravityCounter: number  = 0;
-
+    let gravityCounter: number = 0;
+    let fallingFragment: Fragment = new Fragment(0);
+    let grid: Grid = new Grid();
+    
+    window.addEventListener("load", hndLoad);
     function hndLoad(_event: Event): void {
+        grid.set("Jonas", new Cube(CUBE_TYPE.GREEN, f.Vector3.ZERO()));
         const canvas: HTMLCanvasElement = document.querySelector("canvas");
         f.RenderManager.initialize(true);
         f.Debug.log("Canvas", canvas);
@@ -20,10 +23,10 @@ namespace FudgeCraft {
 
         game = new f.Node("FudgeCraft");
 
-        let fragment: Fragment = new Fragment(0);
-        fragment.addComponent(new f.ComponentTransform());
-        game.appendChild(fragment);
+        fallingFragment.addComponent(new f.ComponentTransform());
+        game.appendChild(fallingFragment);
 
+        let fragment: Fragment;
         fragment = new Fragment(1);
         fragment.addComponent(new f.ComponentTransform(f.Matrix4x4.TRANSLATION(f.Vector3.X(3))));
         game.appendChild(fragment);
@@ -35,7 +38,6 @@ namespace FudgeCraft {
         let cmpLight: f.ComponentLight = new f.ComponentLight(new f.LightDirectional(f.Color.WHITE));
         cmpLight.pivot.lookAt(new f.Vector3(0.5, 1, 0.8));
         game.addComponent(cmpLight);
-
 
         viewport = new f.Viewport();
         viewport.initialize("Viewport", game, cmpCamera, canvas);
@@ -53,9 +55,7 @@ namespace FudgeCraft {
     function update ():void {
         gravityCounter++;
         if (gravityCounter == 60 / fallspeed) {
-            for (let fragment of game.getChildren()) {
-                fragment.cmpTransform.local.translate(new f.Vector3(0,-1,0));
-            }
+            fallingFragment.cmpTransform.local.translate(new f.Vector3(0,-1,0));
             f.RenderManager.update();
             viewport.draw();
             gravityCounter = 0;

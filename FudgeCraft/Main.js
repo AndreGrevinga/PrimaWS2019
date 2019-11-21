@@ -2,14 +2,17 @@
 var FudgeCraft;
 (function (FudgeCraft) {
     var f = FudgeCore;
-    window.addEventListener("load", hndLoad);
     let viewport;
     let game;
     let rotate = f.Vector3.ZERO();
     let translate = f.Vector3.ZERO();
     let fallspeed = 2;
     let gravityCounter = 0;
+    let fallingFragment = new FudgeCraft.Fragment(0);
+    let grid = new FudgeCraft.Grid();
+    window.addEventListener("load", hndLoad);
     function hndLoad(_event) {
+        grid.set("Jonas", new FudgeCraft.Cube(FudgeCraft.CUBE_TYPE.GREEN, f.Vector3.ZERO()));
         const canvas = document.querySelector("canvas");
         f.RenderManager.initialize(true);
         f.Debug.log("Canvas", canvas);
@@ -17,9 +20,9 @@ var FudgeCraft;
         cmpCamera.pivot.translate(new f.Vector3(2, 10, 50));
         cmpCamera.pivot.lookAt(f.Vector3.ZERO());
         game = new f.Node("FudgeCraft");
-        let fragment = new FudgeCraft.Fragment(0);
-        fragment.addComponent(new f.ComponentTransform());
-        game.appendChild(fragment);
+        fallingFragment.addComponent(new f.ComponentTransform());
+        game.appendChild(fallingFragment);
+        let fragment;
         fragment = new FudgeCraft.Fragment(1);
         fragment.addComponent(new f.ComponentTransform(f.Matrix4x4.TRANSLATION(f.Vector3.X(3))));
         game.appendChild(fragment);
@@ -41,9 +44,7 @@ var FudgeCraft;
     function update() {
         gravityCounter++;
         if (gravityCounter == 60 / fallspeed) {
-            for (let fragment of game.getChildren()) {
-                fragment.cmpTransform.local.translate(new f.Vector3(0, -1, 0));
-            }
+            fallingFragment.cmpTransform.local.translate(new f.Vector3(0, -1, 0));
             f.RenderManager.update();
             viewport.draw();
             gravityCounter = 0;
