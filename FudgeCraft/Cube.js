@@ -19,7 +19,7 @@ var FudgeCraft;
             let cmpMaterial = new f.ComponentMaterial(Cube.materials.get(_type));
             this.addComponent(cmpMaterial);
             let cmpTransform = new f.ComponentTransform(f.Matrix4x4.TRANSLATION(_position));
-            cmpTransform.local.scale(f.Vector3.ONE(0.9));
+            cmpTransform.local.scale(f.Vector3.ONE(0.95));
             this.addComponent(cmpTransform);
         }
         static createMaterials() {

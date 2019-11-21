@@ -6,6 +6,8 @@ namespace FudgeCraft {
     let game: f.Node;
     let rotate: f.Vector3 = f.Vector3.ZERO();
     let translate: f.Vector3 = f.Vector3.ZERO();
+    let fallspeed: number = 2;
+    let gravityCounter: number  = 0;
 
     function hndLoad(_event: Event): void {
         const canvas: HTMLCanvasElement = document.querySelector("canvas");
@@ -13,24 +15,20 @@ namespace FudgeCraft {
         f.Debug.log("Canvas", canvas);
 
         let cmpCamera: f.ComponentCamera = new f.ComponentCamera();
-        cmpCamera.pivot.translate(new f.Vector3(2, 3, 10));
+        cmpCamera.pivot.translate(new f.Vector3(2, 10, 50));
         cmpCamera.pivot.lookAt(f.Vector3.ZERO());
 
         game = new f.Node("FudgeCraft");
 
-        // let cube: Cube = new Cube(CUBE_TYPE.BLUE);
         let fragment: Fragment = new Fragment(0);
-        // ƒ.Debug.log("Fragment", fragment);
         fragment.addComponent(new f.ComponentTransform());
         game.appendChild(fragment);
 
         fragment = new Fragment(1);
-        // ƒ.Debug.log("Fragment", fragment);
         fragment.addComponent(new f.ComponentTransform(f.Matrix4x4.TRANSLATION(f.Vector3.X(3))));
         game.appendChild(fragment);
 
         fragment = new Fragment(2);
-        // ƒ.Debug.log("Fragment", fragment);
         fragment.addComponent(new f.ComponentTransform(f.Matrix4x4.TRANSLATION(f.Vector3.X(-3))));
         game.appendChild(fragment);
 
@@ -48,10 +46,22 @@ namespace FudgeCraft {
         f.Debug.log("Game", game);
 
         window.addEventListener("keydown", hndKeyDown);
+        f.Loop.addEventListener(f.EVENT.LOOP_FRAME, update);
+        f.Loop.start();
     }
 
+    function update ():void {
+        gravityCounter++;
+        if (gravityCounter == 60 / fallspeed) {
+            for (let fragment of game.getChildren()) {
+                fragment.cmpTransform.local.translate(new f.Vector3(0,-1,0));
+            }
+            f.RenderManager.update();
+            viewport.draw();
+            gravityCounter = 0;
+        }
+    }
     function hndKeyDown(_event: KeyboardEvent): void {
-        //let rotate: ƒ.Vector3 = ƒ.Vector3.ZERO();
         switch (_event.code) {
             case f.KEYBOARD_CODE.ARROW_UP:
                 rotate.add(f.Vector3.X(-90));
@@ -65,9 +75,6 @@ namespace FudgeCraft {
             case f.KEYBOARD_CODE.ARROW_RIGHT:
                 rotate.add(f.Vector3.Y(90));
                 break;
-            case f.KEYBOARD_CODE.W:
-                translate.add(f.Vector3.Y(1));
-                break;            
             case f.KEYBOARD_CODE.S:
                 translate.add(f.Vector3.Y(-1));
                 break;

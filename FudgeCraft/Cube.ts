@@ -25,7 +25,7 @@ namespace FudgeCraft {
             this.addComponent(cmpMaterial);
 
             let cmpTransform: f.ComponentTransform = new f.ComponentTransform(f.Matrix4x4.TRANSLATION(_position));
-            cmpTransform.local.scale(f.Vector3.ONE(0.9));
+            cmpTransform.local.scale(f.Vector3.ONE(0.95));
             this.addComponent(cmpTransform);
         }
 
