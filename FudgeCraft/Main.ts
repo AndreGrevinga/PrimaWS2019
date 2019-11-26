@@ -1,96 +1,89 @@
 namespace FudgeCraft {
-    import f = FudgeCore;
+    export import f = FudgeCore;
 
-    let viewport: f.Viewport;
-    let game: f.Node;
-    let rotate: f.Vector3 = f.Vector3.ZERO();
-    let translate: f.Vector3 = f.Vector3.ZERO();
-    let fallspeed: number = 2;
-    let gravityCounter: number = 0;
-    let fallingFragment: Fragment = new Fragment(0);
-    let grid: Grid = new Grid();
-    
     window.addEventListener("load", hndLoad);
+
+    export let game: f.Node = new f.Node("FudgeCraft");
+    export let grid: Grid = new Grid();
+    let control: Control = new Control();
+    let viewport: f.Viewport;
+
     function hndLoad(_event: Event): void {
-        grid.set("Jonas", new Cube(CUBE_TYPE.GREEN, f.Vector3.ZERO()));
         const canvas: HTMLCanvasElement = document.querySelector("canvas");
         f.RenderManager.initialize(true);
         f.Debug.log("Canvas", canvas);
 
         let cmpCamera: f.ComponentCamera = new f.ComponentCamera();
-        cmpCamera.pivot.translate(new f.Vector3(2, 10, 50));
+        cmpCamera.pivot.translate(new f.Vector3(4, 6, 20));
         cmpCamera.pivot.lookAt(f.Vector3.ZERO());
-
-        game = new f.Node("FudgeCraft");
-
-        fallingFragment.addComponent(new f.ComponentTransform());
-        game.appendChild(fallingFragment);
-
-        let fragment: Fragment;
-        fragment = new Fragment(1);
-        fragment.addComponent(new f.ComponentTransform(f.Matrix4x4.TRANSLATION(f.Vector3.X(3))));
-        game.appendChild(fragment);
-
-        fragment = new Fragment(2);
-        fragment.addComponent(new f.ComponentTransform(f.Matrix4x4.TRANSLATION(f.Vector3.X(-3))));
-        game.appendChild(fragment);
+        cmpCamera.backgroundColor = f.Color.WHITE;
 
         let cmpLight: f.ComponentLight = new f.ComponentLight(new f.LightDirectional(f.Color.WHITE));
         cmpLight.pivot.lookAt(new f.Vector3(0.5, 1, 0.8));
         game.addComponent(cmpLight);
-
+        let cmpLightAmbient: f.ComponentLight = new f.ComponentLight(new f.LightAmbient(f.Color.DARK_GREY));
+        game.addComponent(cmpLightAmbient);
+        
         viewport = new f.Viewport();
         viewport.initialize("Viewport", game, cmpCamera, canvas);
         f.Debug.log("Viewport", viewport);
-
         viewport.draw();
-
+        
+        startRandomFragment();
+        game.appendChild(control);
+        
+        viewport.draw();
         f.Debug.log("Game", game);
-
+        
         window.addEventListener("keydown", hndKeyDown);
-        f.Loop.addEventListener(f.EVENT.LOOP_FRAME, update);
-        f.Loop.start();
+        
+        //test();
     }
 
-    function update ():void {
-        gravityCounter++;
-        if (gravityCounter == 60 / fallspeed) {
-            fallingFragment.cmpTransform.local.translate(new f.Vector3(0,-1,0));
-            f.RenderManager.update();
-            viewport.draw();
-            gravityCounter = 0;
-        }
-    }
     function hndKeyDown(_event: KeyboardEvent): void {
-        switch (_event.code) {
-            case f.KEYBOARD_CODE.ARROW_UP:
-                rotate.add(f.Vector3.X(-90));
-                break;
-            case f.KEYBOARD_CODE.ARROW_DOWN:
-                rotate.add(f.Vector3.X(90));
-                break;
-            case f.KEYBOARD_CODE.ARROW_LEFT:
-                rotate.add(f.Vector3.Y(-90));
-                break;
-            case f.KEYBOARD_CODE.ARROW_RIGHT:
-                rotate.add(f.Vector3.Y(90));
-                break;
-            case f.KEYBOARD_CODE.S:
-                translate.add(f.Vector3.Y(-1));
-                break;
-            case f.KEYBOARD_CODE.A:
-                translate.add(f.Vector3.X(-1));
-                break;
-            case f.KEYBOARD_CODE.D:
-                translate.add(f.Vector3.X(1));
-                break;
+        if (_event.code == f.KEYBOARD_CODE.SPACE) {
+            control.freeze();
+            startRandomFragment();
         }
-        for (let fragment of game.getChildren()) {
-            fragment.cmpTransform.local.translate(translate);
-            fragment.cmpTransform.local.rotation = rotate;
-        }
-        translate = f.Vector3.ZERO();
-        f.RenderManager.update();
+
+        let transformation: Transformation = Control.transformations[_event.code];
+        if (transformation)
+            move(transformation);
+
+        // ƒ.RenderManager.update();
         viewport.draw();
+    }
+
+    function move(_transformation: Transformation): void {
+        let animationSteps: number = 10;
+        let fullRotation: number = 90;
+        let fullTranslation: number = 1;
+        let move: Transformation = {
+            rotation: _transformation.rotation ? f.Vector3.SCALE(_transformation.rotation, fullRotation) : new f.Vector3(),
+            translation: _transformation.translation ? f.Vector3.SCALE(_transformation.translation, fullTranslation) : new f.Vector3()
+        };
+
+        let timers: f.Timers = f.Time.game.getTimers();
+        if (Object.keys(timers).length > 0)
+            return;
+
+        let collisions: GridElement[] = control.checkCollisions(move);
+        if (collisions.length > 0)
+            return;
+
+        move.translation.scale(1 / animationSteps);
+        move.rotation.scale(1 / animationSteps);
+
+        f.Time.game.setTimer(10, animationSteps, function (): void {
+            control.move(move);
+            // ƒ.RenderManager.update();
+            viewport.draw();
+        });
+    }
+
+    export function startRandomFragment(): void {
+        let fragment: Fragment = Fragment.getRandom();
+        control.cmpTransform.local = f.Matrix4x4.IDENTITY;
+        control.setFragment(fragment);
     }
 }

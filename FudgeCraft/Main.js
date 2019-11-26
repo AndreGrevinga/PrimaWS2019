@@ -1,86 +1,74 @@
 "use strict";
 var FudgeCraft;
 (function (FudgeCraft) {
-    var f = FudgeCore;
-    let viewport;
-    let game;
-    let rotate = f.Vector3.ZERO();
-    let translate = f.Vector3.ZERO();
-    let fallspeed = 2;
-    let gravityCounter = 0;
-    let fallingFragment = new FudgeCraft.Fragment(0);
-    let grid = new FudgeCraft.Grid();
+    FudgeCraft.f = FudgeCore;
     window.addEventListener("load", hndLoad);
+    FudgeCraft.game = new FudgeCraft.f.Node("FudgeCraft");
+    FudgeCraft.grid = new FudgeCraft.Grid();
+    let control = new FudgeCraft.Control();
+    let viewport;
     function hndLoad(_event) {
-        grid.set("Jonas", new FudgeCraft.Cube(FudgeCraft.CUBE_TYPE.GREEN, f.Vector3.ZERO()));
         const canvas = document.querySelector("canvas");
-        f.RenderManager.initialize(true);
-        f.Debug.log("Canvas", canvas);
-        let cmpCamera = new f.ComponentCamera();
-        cmpCamera.pivot.translate(new f.Vector3(2, 10, 50));
-        cmpCamera.pivot.lookAt(f.Vector3.ZERO());
-        game = new f.Node("FudgeCraft");
-        fallingFragment.addComponent(new f.ComponentTransform());
-        game.appendChild(fallingFragment);
-        let fragment;
-        fragment = new FudgeCraft.Fragment(1);
-        fragment.addComponent(new f.ComponentTransform(f.Matrix4x4.TRANSLATION(f.Vector3.X(3))));
-        game.appendChild(fragment);
-        fragment = new FudgeCraft.Fragment(2);
-        fragment.addComponent(new f.ComponentTransform(f.Matrix4x4.TRANSLATION(f.Vector3.X(-3))));
-        game.appendChild(fragment);
-        let cmpLight = new f.ComponentLight(new f.LightDirectional(f.Color.WHITE));
-        cmpLight.pivot.lookAt(new f.Vector3(0.5, 1, 0.8));
-        game.addComponent(cmpLight);
-        viewport = new f.Viewport();
-        viewport.initialize("Viewport", game, cmpCamera, canvas);
-        f.Debug.log("Viewport", viewport);
+        FudgeCraft.f.RenderManager.initialize(true);
+        FudgeCraft.f.Debug.log("Canvas", canvas);
+        let cmpCamera = new FudgeCraft.f.ComponentCamera();
+        cmpCamera.pivot.translate(new FudgeCraft.f.Vector3(4, 6, 20));
+        cmpCamera.pivot.lookAt(FudgeCraft.f.Vector3.ZERO());
+        cmpCamera.backgroundColor = FudgeCraft.f.Color.WHITE;
+        let cmpLight = new FudgeCraft.f.ComponentLight(new FudgeCraft.f.LightDirectional(FudgeCraft.f.Color.WHITE));
+        cmpLight.pivot.lookAt(new FudgeCraft.f.Vector3(0.5, 1, 0.8));
+        FudgeCraft.game.addComponent(cmpLight);
+        let cmpLightAmbient = new FudgeCraft.f.ComponentLight(new FudgeCraft.f.LightAmbient(FudgeCraft.f.Color.DARK_GREY));
+        FudgeCraft.game.addComponent(cmpLightAmbient);
+        viewport = new FudgeCraft.f.Viewport();
+        viewport.initialize("Viewport", FudgeCraft.game, cmpCamera, canvas);
+        FudgeCraft.f.Debug.log("Viewport", viewport);
         viewport.draw();
-        f.Debug.log("Game", game);
+        startRandomFragment();
+        FudgeCraft.game.appendChild(control);
+        viewport.draw();
+        FudgeCraft.f.Debug.log("Game", FudgeCraft.game);
         window.addEventListener("keydown", hndKeyDown);
-        f.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, update);
-        f.Loop.start();
-    }
-    function update() {
-        gravityCounter++;
-        if (gravityCounter == 60 / fallspeed) {
-            fallingFragment.cmpTransform.local.translate(new f.Vector3(0, -1, 0));
-            f.RenderManager.update();
-            viewport.draw();
-            gravityCounter = 0;
-        }
+        //test();
     }
     function hndKeyDown(_event) {
-        switch (_event.code) {
-            case f.KEYBOARD_CODE.ARROW_UP:
-                rotate.add(f.Vector3.X(-90));
-                break;
-            case f.KEYBOARD_CODE.ARROW_DOWN:
-                rotate.add(f.Vector3.X(90));
-                break;
-            case f.KEYBOARD_CODE.ARROW_LEFT:
-                rotate.add(f.Vector3.Y(-90));
-                break;
-            case f.KEYBOARD_CODE.ARROW_RIGHT:
-                rotate.add(f.Vector3.Y(90));
-                break;
-            case f.KEYBOARD_CODE.S:
-                translate.add(f.Vector3.Y(-1));
-                break;
-            case f.KEYBOARD_CODE.A:
-                translate.add(f.Vector3.X(-1));
-                break;
-            case f.KEYBOARD_CODE.D:
-                translate.add(f.Vector3.X(1));
-                break;
+        if (_event.code == FudgeCraft.f.KEYBOARD_CODE.SPACE) {
+            control.freeze();
+            startRandomFragment();
         }
-        for (let fragment of game.getChildren()) {
-            fragment.cmpTransform.local.translate(translate);
-            fragment.cmpTransform.local.rotation = rotate;
-        }
-        translate = f.Vector3.ZERO();
-        f.RenderManager.update();
+        let transformation = FudgeCraft.Control.transformations[_event.code];
+        if (transformation)
+            move(transformation);
+        // ƒ.RenderManager.update();
         viewport.draw();
     }
+    function move(_transformation) {
+        let animationSteps = 10;
+        let fullRotation = 90;
+        let fullTranslation = 1;
+        let move = {
+            rotation: _transformation.rotation ? FudgeCraft.f.Vector3.SCALE(_transformation.rotation, fullRotation) : new FudgeCraft.f.Vector3(),
+            translation: _transformation.translation ? FudgeCraft.f.Vector3.SCALE(_transformation.translation, fullTranslation) : new FudgeCraft.f.Vector3()
+        };
+        let timers = FudgeCraft.f.Time.game.getTimers();
+        if (Object.keys(timers).length > 0)
+            return;
+        let collisions = control.checkCollisions(move);
+        if (collisions.length > 0)
+            return;
+        move.translation.scale(1 / animationSteps);
+        move.rotation.scale(1 / animationSteps);
+        FudgeCraft.f.Time.game.setTimer(10, animationSteps, function () {
+            control.move(move);
+            // ƒ.RenderManager.update();
+            viewport.draw();
+        });
+    }
+    function startRandomFragment() {
+        let fragment = FudgeCraft.Fragment.getRandom();
+        control.cmpTransform.local = FudgeCraft.f.Matrix4x4.IDENTITY;
+        control.setFragment(fragment);
+    }
+    FudgeCraft.startRandomFragment = startRandomFragment;
 })(FudgeCraft || (FudgeCraft = {}));
 //# sourceMappingURL=Main.js.map
