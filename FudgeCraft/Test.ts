@@ -1,24 +1,30 @@
 namespace FudgeCraft {
-    export function test(): void {
-       testGrid();
-    }
+  export function test(): void {
+    testGrid();
+  }
 
-    function testGrid(): void {
-        let cube: Cube = new Cube(CUBE_TYPE.GREEN, f.Vector3.ZERO());
-        grid.push(cube.cmpTransform.local.translation, new GridElement(cube));
+  function testGrid(): void {
+    let cube: Cube = new Cube(CUBE_TYPE.GREEN, f.Vector3.ZERO());
+    grid.push(cube.cmpTransform.local.translation, new GridElement(cube));
 
-        let pulled: GridElement = grid.pull(cube.cmpTransform.local.translation);
-        logResult(cube == pulled.cube, "Grid push and pull", cube, pulled.cube, pulled);
+    let pulled: GridElement = grid.pull(cube.cmpTransform.local.translation);
+    logResult(
+      cube == pulled.cube,
+      "Grid push and pull",
+      cube,
+      pulled.cube,
+      pulled
+    );
 
-        let popped: GridElement = grid.pop(cube.cmpTransform.local.translation);
-        logResult(cube == popped.cube, "Grid pop", cube, popped.cube, popped);
+    let popped: GridElement = grid.pop(cube.cmpTransform.local.translation);
+    logResult(cube == popped.cube, "Grid pop", cube, popped.cube, popped);
 
-        let empty: GridElement = grid.pull(cube.cmpTransform.local.translation);
-        logResult(empty == undefined, "Grid element deleted");
-    }
+    let empty: GridElement = grid.pull(cube.cmpTransform.local.translation);
+    logResult(empty == undefined, "Grid element deleted");
+  }
 
-    function logResult(_success: boolean, ..._args: Object[]): void {
-        let log: Function = _success ? console.log : console.warn;
-        log(`Test success: ${_success}`, _args);
-    }
+  function logResult(_success: boolean, ..._args: Object[]): void {
+    let log: Function = _success ? console.log : console.warn;
+    log(`Test success: ${_success}`, _args);
+  }
 }

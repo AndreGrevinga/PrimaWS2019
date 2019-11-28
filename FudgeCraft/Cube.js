@@ -25,13 +25,34 @@ var FudgeCraft;
         }
         static createMaterials() {
             return new Map([
-                [CUBE_TYPE.RED, new f.Material(CUBE_TYPE.RED, f.ShaderFlat, new f.CoatColored(f.Color.RED))],
-                [CUBE_TYPE.GREEN, new f.Material(CUBE_TYPE.GREEN, f.ShaderFlat, new f.CoatColored(f.Color.GREEN))],
-                [CUBE_TYPE.BLUE, new f.Material(CUBE_TYPE.BLUE, f.ShaderFlat, new f.CoatColored(f.Color.BLUE))],
-                [CUBE_TYPE.MAGENTA, new f.Material(CUBE_TYPE.MAGENTA, f.ShaderFlat, new f.CoatColored(f.Color.MAGENTA))],
-                [CUBE_TYPE.YELLOW, new f.Material(CUBE_TYPE.YELLOW, f.ShaderFlat, new f.CoatColored(f.Color.YELLOW))],
-                [CUBE_TYPE.CYAN, new f.Material(CUBE_TYPE.CYAN, f.ShaderFlat, new f.CoatColored(f.Color.CYAN))],
-                [CUBE_TYPE.GREY, new f.Material(CUBE_TYPE.GREY, f.ShaderFlat, new f.CoatColored(f.Color.LIGHT_GREY))]
+                [
+                    CUBE_TYPE.RED,
+                    new f.Material(CUBE_TYPE.RED, f.ShaderFlat, new f.CoatColored(f.Color.RED))
+                ],
+                [
+                    CUBE_TYPE.GREEN,
+                    new f.Material(CUBE_TYPE.GREEN, f.ShaderFlat, new f.CoatColored(f.Color.GREEN))
+                ],
+                [
+                    CUBE_TYPE.BLUE,
+                    new f.Material(CUBE_TYPE.BLUE, f.ShaderFlat, new f.CoatColored(f.Color.BLUE))
+                ],
+                [
+                    CUBE_TYPE.MAGENTA,
+                    new f.Material(CUBE_TYPE.MAGENTA, f.ShaderFlat, new f.CoatColored(f.Color.MAGENTA))
+                ],
+                [
+                    CUBE_TYPE.YELLOW,
+                    new f.Material(CUBE_TYPE.YELLOW, f.ShaderFlat, new f.CoatColored(f.Color.YELLOW))
+                ],
+                [
+                    CUBE_TYPE.CYAN,
+                    new f.Material(CUBE_TYPE.CYAN, f.ShaderFlat, new f.CoatColored(f.Color.CYAN))
+                ],
+                [
+                    CUBE_TYPE.GREY,
+                    new f.Material(CUBE_TYPE.GREY, f.ShaderFlat, new f.CoatColored(f.Color.LIGHT_GREY))
+                ]
             ]);
         }
     }
