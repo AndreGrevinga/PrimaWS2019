@@ -7,18 +7,19 @@ namespace FudgeCraft {
   export let grid: Grid = new Grid();
   let control: Control = new Control();
   let viewport: f.Viewport;
+  let camera: CameraOrbit;
+  let speedCameraRotation: number = 0.2;
+  let speedCameraTranslation: number = 0.02;
 
   function hndLoad(_event: Event): void {
     const canvas: HTMLCanvasElement = document.querySelector("canvas");
     f.RenderManager.initialize(true);
     f.Debug.log("Canvas", canvas);
 
-    //let cmpCamera: f.ComponentCamera = new f.ComponentCamera();
-    //cmpCamera.pivot.translate(new f.Vector3(4, 6, 20));
-    //cmpCamera.pivot.lookAt(f.Vector3.ZERO());
-    //cmpCamera.backgroundColor = f.Color.WHITE;
-    let camera: CameraOrbit = new CameraOrbit(75);
+    // enable unlimited mouse-movement (user needs to click on canvas first)
+    canvas.addEventListener("click", canvas.requestPointerLock);
 
+    // set lights
     let cmpLight: f.ComponentLight = new f.ComponentLight(
       new f.LightDirectional(f.Color.WHITE)
     );
@@ -29,20 +30,48 @@ namespace FudgeCraft {
     );
     game.addComponent(cmpLightAmbient);
 
+    // setup orbiting camera
+    camera = new CameraOrbit(75);
+    game.appendChild(camera);
+    camera.setRotationX(-20);
+    camera.setRotationY(20);
+
+    // setup viewport
     viewport = new f.Viewport();
     viewport.initialize("Viewport", game, camera.cmpCamera, canvas);
     f.Debug.log("Viewport", viewport);
-    viewport.draw();
 
+    // setup event handling
+    viewport.activatePointerEvent(f.EVENT_POINTER.MOVE, true);
+    viewport.activateWheelEvent(f.EVENT_WHEEL.WHEEL, true);
+    viewport.addEventListener(f.EVENT_POINTER.MOVE, hndPointerMove);
+    viewport.addEventListener(f.EVENT_WHEEL.WHEEL, hndWheelMove);
+    window.addEventListener("keydown", hndKeyDown);
+
+    // start game
     startRandomFragment();
     game.appendChild(control);
 
-    viewport.draw();
+    updateDisplay();
     f.Debug.log("Game", game);
 
-    window.addEventListener("keydown", hndKeyDown);
-
     //test();
+  }
+
+  function updateDisplay(): void {
+    viewport.draw();
+  }
+
+  function hndPointerMove(_event: f.PointerEventƒ): void {
+    // console.log(_event.movementX, _event.movementY);
+    camera.rotateY(_event.movementX * speedCameraRotation);
+    camera.rotateX(_event.movementY * speedCameraRotation);
+    updateDisplay();
+  }
+
+  function hndWheelMove(_event: WheelEvent): void {
+    camera.translate(_event.deltaY * speedCameraTranslation);
+    updateDisplay();
   }
 
   function hndKeyDown(_event: KeyboardEvent): void {
@@ -54,8 +83,7 @@ namespace FudgeCraft {
     let transformation: Transformation = Control.transformations[_event.code];
     if (transformation) move(transformation);
 
-    // ƒ.RenderManager.update();
-    viewport.draw();
+    updateDisplay();
   }
 
   function move(_transformation: Transformation): void {
@@ -82,8 +110,7 @@ namespace FudgeCraft {
 
     f.Time.game.setTimer(10, animationSteps, function(): void {
       control.move(move);
-      // ƒ.RenderManager.update();
-      viewport.draw();
+      updateDisplay();
     });
   }
 

@@ -42,5 +42,27 @@ namespace FudgeCraft {
       let key: string = position.toString();
       return key;
     }
+    getNeighbours(_cube: Cube): Set<Cube> {
+      let neighbours: Set<Cube> = new Set();
+      let position: f.Vector3 = _cube.mtxWorld.translation;
+      let name: string = _cube.name;
+      [-1, 1].forEach(element => {
+        neighbours.add(
+          this.pull(new f.Vector3(position.x + element, 0, 0)).cube
+        );
+        neighbours.add(
+          this.pull(new f.Vector3(position.y + element, 0, 0)).cube
+        );
+        neighbours.add(
+          this.pull(new f.Vector3(position.z + element, 0, 0)).cube
+        );
+      });
+      neighbours.forEach(cube => {
+        if (cube.name != name) {
+          neighbours.delete(cube);
+        }
+      });
+      return neighbours;
+    }
   }
 }

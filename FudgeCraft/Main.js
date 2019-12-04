@@ -7,30 +7,55 @@ var FudgeCraft;
     FudgeCraft.grid = new FudgeCraft.Grid();
     let control = new FudgeCraft.Control();
     let viewport;
+    let camera;
+    let speedCameraRotation = 0.2;
+    let speedCameraTranslation = 0.02;
     function hndLoad(_event) {
         const canvas = document.querySelector("canvas");
         FudgeCraft.f.RenderManager.initialize(true);
         FudgeCraft.f.Debug.log("Canvas", canvas);
-        //let cmpCamera: f.ComponentCamera = new f.ComponentCamera();
-        //cmpCamera.pivot.translate(new f.Vector3(4, 6, 20));
-        //cmpCamera.pivot.lookAt(f.Vector3.ZERO());
-        //cmpCamera.backgroundColor = f.Color.WHITE;
-        let camera = new FudgeCraft.CameraOrbit(75);
+        // enable unlimited mouse-movement (user needs to click on canvas first)
+        canvas.addEventListener("click", canvas.requestPointerLock);
+        // set lights
         let cmpLight = new FudgeCraft.f.ComponentLight(new FudgeCraft.f.LightDirectional(FudgeCraft.f.Color.WHITE));
         cmpLight.pivot.lookAt(new FudgeCraft.f.Vector3(0.5, 1, 0.8));
         FudgeCraft.game.addComponent(cmpLight);
         let cmpLightAmbient = new FudgeCraft.f.ComponentLight(new FudgeCraft.f.LightAmbient(FudgeCraft.f.Color.DARK_GREY));
         FudgeCraft.game.addComponent(cmpLightAmbient);
+        // setup orbiting camera
+        camera = new FudgeCraft.CameraOrbit(75);
+        FudgeCraft.game.appendChild(camera);
+        camera.setRotationX(-20);
+        camera.setRotationY(20);
+        // setup viewport
         viewport = new FudgeCraft.f.Viewport();
         viewport.initialize("Viewport", FudgeCraft.game, camera.cmpCamera, canvas);
         FudgeCraft.f.Debug.log("Viewport", viewport);
-        viewport.draw();
+        // setup event handling
+        viewport.activatePointerEvent("\u0192pointermove" /* MOVE */, true);
+        viewport.activateWheelEvent("\u0192wheel" /* WHEEL */, true);
+        viewport.addEventListener("\u0192pointermove" /* MOVE */, hndPointerMove);
+        viewport.addEventListener("\u0192wheel" /* WHEEL */, hndWheelMove);
+        window.addEventListener("keydown", hndKeyDown);
+        // start game
         startRandomFragment();
         FudgeCraft.game.appendChild(control);
-        viewport.draw();
+        updateDisplay();
         FudgeCraft.f.Debug.log("Game", FudgeCraft.game);
-        window.addEventListener("keydown", hndKeyDown);
         //test();
+    }
+    function updateDisplay() {
+        viewport.draw();
+    }
+    function hndPointerMove(_event) {
+        // console.log(_event.movementX, _event.movementY);
+        camera.rotateY(_event.movementX * speedCameraRotation);
+        camera.rotateX(_event.movementY * speedCameraRotation);
+        updateDisplay();
+    }
+    function hndWheelMove(_event) {
+        camera.translate(_event.deltaY * speedCameraTranslation);
+        updateDisplay();
     }
     function hndKeyDown(_event) {
         if (_event.code == FudgeCraft.f.KEYBOARD_CODE.SPACE) {
@@ -40,8 +65,7 @@ var FudgeCraft;
         let transformation = FudgeCraft.Control.transformations[_event.code];
         if (transformation)
             move(transformation);
-        // ƒ.RenderManager.update();
-        viewport.draw();
+        updateDisplay();
     }
     function move(_transformation) {
         let animationSteps = 10;
@@ -65,8 +89,7 @@ var FudgeCraft;
         move.rotation.scale(1 / animationSteps);
         FudgeCraft.f.Time.game.setTimer(10, animationSteps, function () {
             control.move(move);
-            // ƒ.RenderManager.update();
-            viewport.draw();
+            updateDisplay();
         });
     }
     function startRandomFragment() {
