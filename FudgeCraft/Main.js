@@ -19,7 +19,7 @@ var FudgeCraft;
         // set lights
         let cmpLight = new FudgeCraft.f.ComponentLight(new FudgeCraft.f.LightDirectional(FudgeCraft.f.Color.WHITE));
         cmpLight.pivot.lookAt(new FudgeCraft.f.Vector3(0.5, 1, 0.8));
-        FudgeCraft.game.addComponent(cmpLight);
+        // game.addComponent(cmpLight);
         let cmpLightAmbient = new FudgeCraft.f.ComponentLight(new FudgeCraft.f.LightAmbient(FudgeCraft.f.Color.DARK_GREY));
         FudgeCraft.game.addComponent(cmpLightAmbient);
         // setup orbiting camera
@@ -27,6 +27,7 @@ var FudgeCraft;
         FudgeCraft.game.appendChild(camera);
         camera.setRotationX(-20);
         camera.setRotationY(20);
+        camera.cmpCamera.getContainer().addComponent(cmpLight);
         // setup viewport
         viewport = new FudgeCraft.f.Viewport();
         viewport.initialize("Viewport", FudgeCraft.game, camera.cmpCamera, canvas);
@@ -37,16 +38,20 @@ var FudgeCraft;
         viewport.addEventListener("\u0192pointermove" /* MOVE */, hndPointerMove);
         viewport.addEventListener("\u0192wheel" /* WHEEL */, hndWheelMove);
         window.addEventListener("keydown", hndKeyDown);
-        // start game
-        startRandomFragment();
         FudgeCraft.game.appendChild(control);
+        startGame();
+        //startTests();
         updateDisplay();
         FudgeCraft.f.Debug.log("Game", FudgeCraft.game);
-        //test();
+    }
+    function startGame() {
+        FudgeCraft.grid.push(FudgeCraft.f.Vector3.ZERO(), new FudgeCraft.GridElement(new FudgeCraft.Cube(FudgeCraft.CUBE_TYPE.GREY, FudgeCraft.f.Vector3.ZERO())));
+        startRandomFragment();
     }
     function updateDisplay() {
         viewport.draw();
     }
+    FudgeCraft.updateDisplay = updateDisplay;
     function hndPointerMove(_event) {
         // console.log(_event.movementX, _event.movementY);
         camera.rotateY(_event.movementX * speedCameraRotation);
@@ -59,13 +64,27 @@ var FudgeCraft;
     }
     function hndKeyDown(_event) {
         if (_event.code == FudgeCraft.f.KEYBOARD_CODE.SPACE) {
-            control.freeze();
+            let frozen = control.freeze();
+            let combos = new FudgeCraft.Combos(frozen);
+            handleCombos(combos);
             startRandomFragment();
         }
         let transformation = FudgeCraft.Control.transformations[_event.code];
         if (transformation)
             move(transformation);
         updateDisplay();
+    }
+    function handleCombos(_combos) {
+        for (let combo of _combos.found)
+            if (combo.length > 2)
+                for (let element of combo) {
+                    let mtxLocal = element.cube.cmpTransform.local;
+                    console.log(element.cube.name, mtxLocal.translation.getMutator());
+                    // mtxLocal.rotateX(45);
+                    // mtxLocal.rotateY(45);
+                    // mtxLocal.rotateY(45, true);
+                    mtxLocal.scale(FudgeCraft.f.Vector3.ONE(0.5));
+                }
     }
     function move(_transformation) {
         let animationSteps = 10;

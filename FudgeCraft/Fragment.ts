@@ -1,5 +1,6 @@
 namespace FudgeCraft {
   import f = FudgeCore;
+
   export class Fragment extends f.Node {
     private static shapes: number[][][] = Fragment.getShapeArray();
     public position: f.Vector3 = new f.Vector3(0, 0, 0);

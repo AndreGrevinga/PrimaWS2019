@@ -28,10 +28,10 @@ var FudgeCraft;
             this.fragment = _fragment;
         }
         move(_transformation) {
-            let mtxControl = this.cmpTransform.local;
+            let mtxContainer = this.cmpTransform.local;
             let mtxFragment = this.fragment.cmpTransform.local;
             mtxFragment.rotate(_transformation.rotation, true);
-            mtxControl.translate(_transformation.translation);
+            mtxContainer.translate(_transformation.translation);
         }
         checkCollisions(_transformation) {
             let mtxContainer = this.cmpTransform.local;
@@ -54,11 +54,15 @@ var FudgeCraft;
             return collisions;
         }
         freeze() {
+            let frozen = [];
             for (let cube of this.fragment.getChildren()) {
                 let position = cube.mtxWorld.translation;
                 cube.cmpTransform.local.translation = position;
-                FudgeCraft.grid.push(position, new FudgeCraft.GridElement(cube));
+                let element = new FudgeCraft.GridElement(cube);
+                FudgeCraft.grid.push(position, element);
+                frozen.push(element);
             }
+            return frozen;
         }
     }
     Control.transformations = Control.defineControls();

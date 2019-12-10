@@ -1,5 +1,6 @@
 namespace FudgeCraft {
   import f = FudgeCore;
+
   export interface Transformation {
     translation?: f.Vector3;
     rotation?: f.Vector3;
@@ -49,10 +50,10 @@ namespace FudgeCraft {
     }
 
     public move(_transformation: Transformation): void {
-      let mtxControl: f.Matrix4x4 = this.cmpTransform.local;
+      let mtxContainer: f.Matrix4x4 = this.cmpTransform.local;
       let mtxFragment: f.Matrix4x4 = this.fragment.cmpTransform.local;
       mtxFragment.rotate(_transformation.rotation, true);
-      mtxControl.translate(_transformation.translation);
+      mtxContainer.translate(_transformation.translation);
     }
 
     public checkCollisions(_transformation: Transformation): Collision[] {
@@ -79,12 +80,16 @@ namespace FudgeCraft {
       return collisions;
     }
 
-    public freeze(): void {
+    public freeze(): GridElement[] {
+      let frozen: GridElement[] = [];
       for (let cube of this.fragment.getChildren()) {
         let position: f.Vector3 = cube.mtxWorld.translation;
         cube.cmpTransform.local.translation = position;
-        grid.push(position, new GridElement(cube));
+        let element: GridElement = new GridElement(cube);
+        grid.push(position, element);
+        frozen.push(element);
       }
+      return frozen;
     }
   }
 }

@@ -5,7 +5,7 @@ var FudgeCraft;
     class CameraOrbit extends f.Node {
         constructor(_maxRotX) {
             super("CameraOrbit");
-            //rotatorX: f.Node;
+            //rotatorX: ƒ.Node;
             this.maxRotX = 75;
             this.minDistance = 10;
             this.maxRotX = Math.min(_maxRotX, 89);
@@ -36,7 +36,6 @@ var FudgeCraft;
             this.cmpTransform.local.rotation = f.Vector3.Y(_angle);
         }
         setRotationX(_angle) {
-            // @Jonas: rotation.z = ... verändert nur die Koordinate einer Kopie
             _angle = Math.min(Math.max(-this.maxRotX, _angle), this.maxRotX);
             this.rotatorX.cmpTransform.local.rotation = f.Vector3.X(_angle);
         }

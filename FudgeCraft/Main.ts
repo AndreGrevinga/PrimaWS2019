@@ -24,7 +24,7 @@ namespace FudgeCraft {
       new f.LightDirectional(f.Color.WHITE)
     );
     cmpLight.pivot.lookAt(new f.Vector3(0.5, 1, 0.8));
-    game.addComponent(cmpLight);
+    // game.addComponent(cmpLight);
     let cmpLightAmbient: f.ComponentLight = new f.ComponentLight(
       new f.LightAmbient(f.Color.DARK_GREY)
     );
@@ -35,6 +35,7 @@ namespace FudgeCraft {
     game.appendChild(camera);
     camera.setRotationX(-20);
     camera.setRotationY(20);
+    camera.cmpCamera.getContainer().addComponent(cmpLight);
 
     // setup viewport
     viewport = new f.Viewport();
@@ -48,17 +49,24 @@ namespace FudgeCraft {
     viewport.addEventListener(f.EVENT_WHEEL.WHEEL, hndWheelMove);
     window.addEventListener("keydown", hndKeyDown);
 
-    // start game
-    startRandomFragment();
     game.appendChild(control);
+
+    startGame();
+    //startTests();
 
     updateDisplay();
     f.Debug.log("Game", game);
-
-    //test();
   }
 
-  function updateDisplay(): void {
+  function startGame(): void {
+    grid.push(
+      f.Vector3.ZERO(),
+      new GridElement(new Cube(CUBE_TYPE.GREY, f.Vector3.ZERO()))
+    );
+    startRandomFragment();
+  }
+
+  export function updateDisplay(): void {
     viewport.draw();
   }
 
@@ -76,7 +84,9 @@ namespace FudgeCraft {
 
   function hndKeyDown(_event: KeyboardEvent): void {
     if (_event.code == f.KEYBOARD_CODE.SPACE) {
-      control.freeze();
+      let frozen: GridElement[] = control.freeze();
+      let combos: Combos = new Combos(frozen);
+      handleCombos(combos);
       startRandomFragment();
     }
 
@@ -84,6 +94,19 @@ namespace FudgeCraft {
     if (transformation) move(transformation);
 
     updateDisplay();
+  }
+
+  function handleCombos(_combos: Combos): void {
+    for (let combo of _combos.found)
+      if (combo.length > 2)
+        for (let element of combo) {
+          let mtxLocal: f.Matrix4x4 = element.cube.cmpTransform.local;
+          console.log(element.cube.name, mtxLocal.translation.getMutator());
+          // mtxLocal.rotateX(45);
+          // mtxLocal.rotateY(45);
+          // mtxLocal.rotateY(45, true);
+          mtxLocal.scale(f.Vector3.ONE(0.5));
+        }
   }
 
   function move(_transformation: Transformation): void {

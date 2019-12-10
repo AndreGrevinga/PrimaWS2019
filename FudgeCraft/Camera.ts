@@ -2,7 +2,7 @@ namespace FudgeCraft {
   import f = FudgeCore;
 
   export class CameraOrbit extends f.Node {
-    //rotatorX: f.Node;
+    //rotatorX: ƒ.Node;
     maxRotX: number = 75;
     minDistance: number = 10;
 
@@ -46,7 +46,6 @@ namespace FudgeCraft {
     }
 
     setRotationX(_angle: number): void {
-      // @Jonas: rotation.z = ... verändert nur die Koordinate einer Kopie
       _angle = Math.min(Math.max(-this.maxRotX, _angle), this.maxRotX);
       this.rotatorX.cmpTransform.local.rotation = f.Vector3.X(_angle);
     }
