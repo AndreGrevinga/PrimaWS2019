@@ -49,6 +49,7 @@ namespace Platformer {
 
       crc2.strokeRect(-1, -1, canvas.width / 2, canvas.height + 2);
       crc2.strokeRect(-1, canvas.height / 2, canvas.width + 2, canvas.height);
+      fallSpeed = fallSpeed * 1.05;
     }
   }
 

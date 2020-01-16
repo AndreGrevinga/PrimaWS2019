@@ -21,12 +21,12 @@ namespace FudgeCraft {
 
     // set lights
     let cmpLight: f.ComponentLight = new f.ComponentLight(
-      new f.LightDirectional(f.Color.WHITE)
+      new f.LightDirectional(f.Color.CSS("WHITE"))
     );
     cmpLight.pivot.lookAt(new f.Vector3(0.5, 1, 0.8));
     // game.addComponent(cmpLight);
     let cmpLightAmbient: f.ComponentLight = new f.ComponentLight(
-      new f.LightAmbient(f.Color.DARK_GREY)
+      new f.LightAmbient(f.Color.CSS("DARKGREY"))
     );
     game.addComponent(cmpLightAmbient);
 
@@ -70,7 +70,7 @@ namespace FudgeCraft {
     viewport.draw();
   }
 
-  function hndPointerMove(_event: f.PointerEventƒ): void {
+  function hndPointerMove(_event: f.EventPointer): void {
     // console.log(_event.movementX, _event.movementY);
     camera.rotateY(_event.movementX * speedCameraRotation);
     camera.rotateX(_event.movementY * speedCameraRotation);

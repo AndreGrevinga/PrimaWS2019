@@ -41,13 +41,17 @@ var L02_FirstFudge;
             isBallMoving = true;
         }
         if (isBallMoving) {
-            if ((keysPressed[f.KEYBOARD_CODE.ARROW_UP]) && !detectHit(wallTop, paddleRight.cmpTransform.local.translation))
+            if (keysPressed[f.KEYBOARD_CODE.ARROW_UP] &&
+                !detectHit(wallTop, paddleRight.cmpTransform.local.translation))
                 paddleRight.cmpTransform.local.translate(new f.Vector3(0, 0.3, 0));
-            if (keysPressed[f.KEYBOARD_CODE.ARROW_DOWN] && !detectHit(wallBottom, paddleRight.cmpTransform.local.translation))
+            if (keysPressed[f.KEYBOARD_CODE.ARROW_DOWN] &&
+                !detectHit(wallBottom, paddleRight.cmpTransform.local.translation))
                 paddleRight.cmpTransform.local.translate(f.Vector3.Y(-0.3));
-            if (keysPressed[f.KEYBOARD_CODE.W] && !detectHit(wallTop, paddleLeft.cmpTransform.local.translation))
+            if (keysPressed[f.KEYBOARD_CODE.W] &&
+                !detectHit(wallTop, paddleLeft.cmpTransform.local.translation))
                 paddleLeft.cmpTransform.local.translate(new f.Vector3(0, 0.3, 0));
-            if (keysPressed[f.KEYBOARD_CODE.S] && !detectHit(wallBottom, paddleLeft.cmpTransform.local.translation))
+            if (keysPressed[f.KEYBOARD_CODE.S] &&
+                !detectHit(wallBottom, paddleLeft.cmpTransform.local.translation))
                 paddleLeft.cmpTransform.local.translate(f.Vector3.Y(-0.3));
             for (let node of pong.getChildren()) {
                 if (node.name == "Ball")
@@ -64,7 +68,8 @@ var L02_FirstFudge;
         ball.cmpTransform.local.translate(ballSpeed);
     }
     function detectHit(_node, _position) {
-        let sclRect = _node.getComponent(f.ComponentMesh).pivot.scaling.copy;
+        let sclRect = _node.getComponent(f.ComponentMesh).pivot.scaling
+            .copy;
         let posRect = _node.cmpTransform.local.translation.copy;
         let rect = new f.Rectangle(posRect.x, posRect.y, sclRect.x, sclRect.y, f.ORIGIN2D.CENTER);
         return rect.isInside(_position.toVector2());
@@ -104,7 +109,7 @@ var L02_FirstFudge;
     }
     function createNode(_name, _mesh, _material, _translation, _scaling) {
         let node = new f.Node(_name);
-        node.addComponent(new f.ComponentTransform);
+        node.addComponent(new f.ComponentTransform());
         node.addComponent(new f.ComponentMaterial(_material));
         node.addComponent(new f.ComponentMesh(_mesh));
         node.cmpTransform.local.translate(_translation.toVector3());
@@ -114,7 +119,7 @@ var L02_FirstFudge;
     function createPong() {
         let pong = new f.Node("Pong");
         let meshQuad = new f.MeshQuad();
-        let mtrSolidWhite = new f.Material("SolidWhite", f.ShaderUniColor, new f.CoatColored(f.Color.WHITE));
+        let mtrSolidWhite = new f.Material("SolidWhite", f.ShaderUniColor, new f.CoatColored(f.Color.CSS("WHITE")));
         pong.appendChild(createNode("WallRight", meshQuad, mtrSolidWhite, new f.Vector2(22, 0), new f.Vector2(1, 30)));
         pong.appendChild(createNode("WallLeft", meshQuad, mtrSolidWhite, new f.Vector2(-22, 0), new f.Vector2(1, 30)));
         wallTop = createNode("WallTop", meshQuad, mtrSolidWhite, new f.Vector2(0, 15), new f.Vector2(45, 1));

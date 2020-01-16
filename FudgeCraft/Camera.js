@@ -15,7 +15,7 @@ var FudgeCraft;
             rotatorX.addComponent(new f.ComponentTransform());
             this.appendChild(rotatorX);
             let cmpCamera = new f.ComponentCamera();
-            cmpCamera.backgroundColor = f.Color.WHITE;
+            cmpCamera.backgroundColor = f.Color.CSS("White");
             rotatorX.addComponent(cmpCamera);
             this.setDistance(20);
         }

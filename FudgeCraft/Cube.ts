@@ -40,7 +40,7 @@ namespace FudgeCraft {
           new f.Material(
             CUBE_TYPE.RED,
             f.ShaderFlat,
-            new f.CoatColored(f.Color.RED)
+            new f.CoatColored(f.Color.CSS("RED"))
           )
         ],
         [
@@ -48,7 +48,7 @@ namespace FudgeCraft {
           new f.Material(
             CUBE_TYPE.GREEN,
             f.ShaderFlat,
-            new f.CoatColored(f.Color.GREEN)
+            new f.CoatColored(f.Color.CSS("GREEN"))
           )
         ],
         [
@@ -56,7 +56,7 @@ namespace FudgeCraft {
           new f.Material(
             CUBE_TYPE.BLUE,
             f.ShaderFlat,
-            new f.CoatColored(f.Color.BLUE)
+            new f.CoatColored(f.Color.CSS("BLUE"))
           )
         ],
         [
@@ -64,7 +64,7 @@ namespace FudgeCraft {
           new f.Material(
             CUBE_TYPE.MAGENTA,
             f.ShaderFlat,
-            new f.CoatColored(f.Color.MAGENTA)
+            new f.CoatColored(f.Color.CSS("MAGENTA"))
           )
         ],
         [
@@ -72,7 +72,7 @@ namespace FudgeCraft {
           new f.Material(
             CUBE_TYPE.YELLOW,
             f.ShaderFlat,
-            new f.CoatColored(f.Color.YELLOW)
+            new f.CoatColored(f.Color.CSS("YELLOW"))
           )
         ],
         [
@@ -80,7 +80,7 @@ namespace FudgeCraft {
           new f.Material(
             CUBE_TYPE.CYAN,
             f.ShaderFlat,
-            new f.CoatColored(f.Color.CYAN)
+            new f.CoatColored(f.Color.CSS("CYAN"))
           )
         ],
         [
@@ -88,7 +88,7 @@ namespace FudgeCraft {
           new f.Material(
             CUBE_TYPE.GREY,
             f.ShaderFlat,
-            new f.CoatColored(f.Color.LIGHT_GREY)
+            new f.CoatColored(f.Color.CSS("LIGHTGREY"))
           )
         ]
       ]);
