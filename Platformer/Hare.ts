@@ -3,7 +3,10 @@ namespace Platformer {
 
   export enum ACTION {
     IDLE = "Idle",
-    WALK = "Walk"
+    WALK = "Walk",
+    JUMP = "Jump",
+    THROW = "Throw",
+    FALL = "Fall"
   }
   export enum DIRECTION {
     LEFT,
@@ -12,10 +15,10 @@ namespace Platformer {
 
   export class Hare extends f.Node {
     private static sprites: Sprite[];
-    private static speedMax: number = 1.5; // units per second
-    // private action: ACTION;
-    // private time: ƒ.Time = new ƒ.Time();
-    public speed: number = 0;
+    private static speedMax: f.Vector2 = new f.Vector2(1.5, 5); // units per second
+    private static gravity: f.Vector2 = f.Vector2.Y(-3);
+    private framecounter: number = 0;
+    public speed: f.Vector3 = f.Vector3.ZERO();
 
     constructor(_name: string = "Hare") {
       super(_name);
@@ -42,10 +45,21 @@ namespace Platformer {
 
     public static generateSprites(_txtImage: f.TextureImage): void {
       Hare.sprites = [];
-      let sprite: Sprite = new Sprite(ACTION.WALK);
+      let sprite: Sprite = new Sprite(ACTION.IDLE);
       sprite.generateByGrid(
         _txtImage,
-        f.Rectangle.GET(2, 104, 68, 64),
+        f.Rectangle.GET(0, 0, 60, 80),
+        4,
+        f.Vector2.ZERO(),
+        64,
+        f.ORIGIN2D.BOTTOMCENTER
+      );
+      Hare.sprites.push(sprite);
+
+      sprite = new Sprite(ACTION.WALK);
+      sprite.generateByGrid(
+        _txtImage,
+        f.Rectangle.GET(0, 90, 60, 80),
         6,
         f.Vector2.ZERO(),
         64,
@@ -53,11 +67,22 @@ namespace Platformer {
       );
       Hare.sprites.push(sprite);
 
-      sprite = new Sprite(ACTION.IDLE);
+      sprite = new Sprite(ACTION.JUMP);
       sprite.generateByGrid(
         _txtImage,
-        f.Rectangle.GET(8, 20, 45, 72),
-        4,
+        f.Rectangle.GET(180, 180, 60, 80),
+        3,
+        f.Vector2.ZERO(),
+        64,
+        f.ORIGIN2D.BOTTOMCENTER
+      );
+      Hare.sprites.push(sprite);
+
+      sprite = new Sprite(ACTION.FALL);
+      sprite.generateByGrid(
+        _txtImage,
+        f.Rectangle.GET(360, 180, 60, 80),
+        1,
         f.Vector2.ZERO(),
         64,
         f.ORIGIN2D.BOTTOMCENTER
@@ -68,28 +93,54 @@ namespace Platformer {
     public show(_action: ACTION): void {
       for (let child of this.getChildren())
         child.activate(child.name == _action);
-      // this.action = _action;
     }
 
     public act(_action: ACTION, _direction?: DIRECTION): void {
       switch (_action) {
         case ACTION.IDLE:
-          this.speed = 0;
+          this.speed.x = 0;
           break;
         case ACTION.WALK:
           let direction: number = _direction == DIRECTION.RIGHT ? 1 : -1;
-          this.speed = Hare.speedMax * direction;
+          this.speed.x = Hare.speedMax.x; // * direction;
           this.cmpTransform.local.rotation = f.Vector3.Y(90 - 90 * direction);
           // console.log(direction);
+          break;
+        case ACTION.JUMP:
+          this.speed.y = 2;
           break;
       }
       this.show(_action);
     }
 
     private update = (_event: f.Eventƒ): void => {
+      this.framecounter++;
+      if (this.framecounter == 6) {
+        this.framecounter = 0;
+        this.broadcastEvent(new CustomEvent("showNext"));
+      }
+
       let timeFrame: number = f.Loop.timeFrameGame / 1000;
-      this.cmpTransform.local.translateX(this.speed * timeFrame);
-      this.broadcastEvent(new CustomEvent("showNext"));
+      this.speed.y += Hare.gravity.y * timeFrame;
+      let distance: f.Vector3 = f.Vector3.SCALE(this.speed, timeFrame);
+      this.cmpTransform.local.translate(distance);
+
+      this.checkCollision();
     };
+
+    private checkCollision(): void {
+      for (let floor of level.getChildren()) {
+        let rect: f.Rectangle = (<Floor>floor).getRectWorld();
+        let hit: boolean = rect.isInside(
+          this.cmpTransform.local.translation.toVector2()
+        );
+        if (hit) {
+          let translation: f.Vector3 = this.cmpTransform.local.translation;
+          translation.y = rect.y;
+          this.cmpTransform.local.translation = translation;
+          this.speed.y = 0;
+        }
+      }
+    }
   }
 }

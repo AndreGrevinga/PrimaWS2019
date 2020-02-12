@@ -6,6 +6,9 @@ var Platformer;
     (function (ACTION) {
         ACTION["IDLE"] = "Idle";
         ACTION["WALK"] = "Walk";
+        ACTION["JUMP"] = "Jump";
+        ACTION["THROW"] = "Throw";
+        ACTION["FALL"] = "Fall";
     })(ACTION = Platformer.ACTION || (Platformer.ACTION = {}));
     let DIRECTION;
     (function (DIRECTION) {
@@ -15,13 +18,19 @@ var Platformer;
     class Hare extends f.Node {
         constructor(_name = "Hare") {
             super(_name);
-            // private action: ACTION;
-            // private time: ƒ.Time = new ƒ.Time();
-            this.speed = 0;
+            this.framecounter = 0;
+            this.speed = f.Vector3.ZERO();
             this.update = (_event) => {
+                this.framecounter++;
+                if (this.framecounter == 6) {
+                    this.framecounter = 0;
+                    this.broadcastEvent(new CustomEvent("showNext"));
+                }
                 let timeFrame = f.Loop.timeFrameGame / 1000;
-                this.cmpTransform.local.translateX(this.speed * timeFrame);
-                this.broadcastEvent(new CustomEvent("showNext"));
+                this.speed.y += Hare.gravity.y * timeFrame;
+                let distance = f.Vector3.SCALE(this.speed, timeFrame);
+                this.cmpTransform.local.translate(distance);
+                this.checkCollision();
             };
             this.addComponent(new f.ComponentTransform());
             for (let sprite of Hare.sprites) {
@@ -37,34 +46,55 @@ var Platformer;
         }
         static generateSprites(_txtImage) {
             Hare.sprites = [];
-            let sprite = new Platformer.Sprite(ACTION.WALK);
-            sprite.generateByGrid(_txtImage, f.Rectangle.GET(2, 104, 68, 64), 6, f.Vector2.ZERO(), 64, f.ORIGIN2D.BOTTOMCENTER);
+            let sprite = new Platformer.Sprite(ACTION.IDLE);
+            sprite.generateByGrid(_txtImage, f.Rectangle.GET(0, 0, 60, 80), 4, f.Vector2.ZERO(), 64, f.ORIGIN2D.BOTTOMCENTER);
             Hare.sprites.push(sprite);
-            sprite = new Platformer.Sprite(ACTION.IDLE);
-            sprite.generateByGrid(_txtImage, f.Rectangle.GET(8, 20, 45, 72), 4, f.Vector2.ZERO(), 64, f.ORIGIN2D.BOTTOMCENTER);
+            sprite = new Platformer.Sprite(ACTION.WALK);
+            sprite.generateByGrid(_txtImage, f.Rectangle.GET(0, 90, 60, 80), 6, f.Vector2.ZERO(), 64, f.ORIGIN2D.BOTTOMCENTER);
+            Hare.sprites.push(sprite);
+            sprite = new Platformer.Sprite(ACTION.JUMP);
+            sprite.generateByGrid(_txtImage, f.Rectangle.GET(180, 180, 60, 80), 3, f.Vector2.ZERO(), 64, f.ORIGIN2D.BOTTOMCENTER);
+            Hare.sprites.push(sprite);
+            sprite = new Platformer.Sprite(ACTION.FALL);
+            sprite.generateByGrid(_txtImage, f.Rectangle.GET(360, 180, 60, 80), 1, f.Vector2.ZERO(), 64, f.ORIGIN2D.BOTTOMCENTER);
             Hare.sprites.push(sprite);
         }
         show(_action) {
             for (let child of this.getChildren())
                 child.activate(child.name == _action);
-            // this.action = _action;
         }
         act(_action, _direction) {
             switch (_action) {
                 case ACTION.IDLE:
-                    this.speed = 0;
+                    this.speed.x = 0;
                     break;
                 case ACTION.WALK:
                     let direction = _direction == DIRECTION.RIGHT ? 1 : -1;
-                    this.speed = Hare.speedMax * direction;
+                    this.speed.x = Hare.speedMax.x; // * direction;
                     this.cmpTransform.local.rotation = f.Vector3.Y(90 - 90 * direction);
                     // console.log(direction);
+                    break;
+                case ACTION.JUMP:
+                    this.speed.y = 2;
                     break;
             }
             this.show(_action);
         }
+        checkCollision() {
+            for (let floor of Platformer.level.getChildren()) {
+                let rect = floor.getRectWorld();
+                let hit = rect.isInside(this.cmpTransform.local.translation.toVector2());
+                if (hit) {
+                    let translation = this.cmpTransform.local.translation;
+                    translation.y = rect.y;
+                    this.cmpTransform.local.translation = translation;
+                    this.speed.y = 0;
+                }
+            }
+        }
     }
-    Hare.speedMax = 1.5; // units per second
+    Hare.speedMax = new f.Vector2(1.5, 5); // units per second
+    Hare.gravity = f.Vector2.Y(-3);
     Platformer.Hare = Hare;
 })(Platformer || (Platformer = {}));
 //# sourceMappingURL=Hare.js.map
