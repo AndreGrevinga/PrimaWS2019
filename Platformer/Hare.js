@@ -83,7 +83,12 @@ var Platformer;
         checkCollision() {
             for (let floor of Platformer.level.getChildren()) {
                 let rect = floor.getRectWorld();
-                let hit = rect.isInside(this.cmpTransform.local.translation.toVector2());
+                let hit = false;
+                for (let sprite of this.getChildren()) {
+                    if (sprite.isActive) {
+                        hit = rect.collides(sprite.getRectWorld());
+                    }
+                }
                 if (hit) {
                     let translation = this.cmpTransform.local.translation;
                     translation.y = rect.y;

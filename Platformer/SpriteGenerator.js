@@ -61,14 +61,12 @@ var L14_ScrollerFoundation;
             frame.pivot.translate(new f.Vector3(rectQuad.position.x + rectQuad.size.x / 2, -rectQuad.position.y - rectQuad.size.y / 2, 0));
             frame.pivot.scaleX(rectQuad.size.x);
             frame.pivot.scaleY(rectQuad.size.y);
-            // ƒ.Debug.log(rectQuad.toString());
             let coat = new f.CoatTextured();
             coat.pivot.translate(frame.rectTexture.position);
             coat.pivot.scale(frame.rectTexture.size);
             coat.name = _name;
             coat.texture = _texture;
             frame.material = new f.Material(_name, f.ShaderTexture, coat);
-            // ƒ.Debug.log(coat.pivot.toString());
             return frame;
         }
     }
@@ -102,6 +100,18 @@ var L14_ScrollerFoundation;
         }
         setFrameDirection(_direction) {
             this.direction = Math.floor(_direction);
+        }
+        getRectWorld() {
+            let rect = f.Rectangle.GET(0, 0, 100, 100);
+            let topleft = new f.Vector3(-0.5, 0.5, 0);
+            let bottomright = new f.Vector3(0.5, -0.5, 0);
+            let mtxResult = f.Matrix4x4.MULTIPLICATION(this.mtxWorld, this.cmpMesh.pivot);
+            topleft.transform(mtxResult, true);
+            bottomright.transform(mtxResult, true);
+            let size = new f.Vector2(bottomright.x - topleft.x, bottomright.y - topleft.y);
+            rect.position = topleft.toVector2();
+            rect.size = size;
+            return rect;
         }
     }
     L14_ScrollerFoundation.NodeSprite = NodeSprite;

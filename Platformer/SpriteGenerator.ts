@@ -123,7 +123,6 @@ namespace L14_ScrollerFoundation {
       );
       frame.pivot.scaleX(rectQuad.size.x);
       frame.pivot.scaleY(rectQuad.size.y);
-      // ƒ.Debug.log(rectQuad.toString());
 
       let coat: f.CoatTextured = new f.CoatTextured();
       coat.pivot.translate(frame.rectTexture.position);
@@ -132,7 +131,6 @@ namespace L14_ScrollerFoundation {
       coat.texture = _texture;
 
       frame.material = new f.Material(_name, f.ShaderTexture, coat);
-      // ƒ.Debug.log(coat.pivot.toString());
 
       return frame;
     }
@@ -176,6 +174,27 @@ namespace L14_ScrollerFoundation {
 
     public setFrameDirection(_direction: number): void {
       this.direction = Math.floor(_direction);
+    }
+    public getRectWorld(): f.Rectangle {
+      let rect: f.Rectangle = f.Rectangle.GET(0, 0, 100, 100);
+      let topleft: f.Vector3 = new f.Vector3(-0.5, 0.5, 0);
+      let bottomright: f.Vector3 = new f.Vector3(0.5, -0.5, 0);
+
+      let mtxResult: f.Matrix4x4 = f.Matrix4x4.MULTIPLICATION(
+        this.mtxWorld,
+        this.cmpMesh.pivot
+      );
+      topleft.transform(mtxResult, true);
+      bottomright.transform(mtxResult, true);
+
+      let size: f.Vector2 = new f.Vector2(
+        bottomright.x - topleft.x,
+        bottomright.y - topleft.y
+      );
+      rect.position = topleft.toVector2();
+      rect.size = size;
+
+      return rect;
     }
   }
 }

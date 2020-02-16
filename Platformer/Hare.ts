@@ -131,9 +131,12 @@ namespace Platformer {
     private checkCollision(): void {
       for (let floor of level.getChildren()) {
         let rect: f.Rectangle = (<Floor>floor).getRectWorld();
-        let hit: boolean = rect.isInside(
-          this.cmpTransform.local.translation.toVector2()
-        );
+        let hit: boolean = false;
+        for (let sprite of this.getChildren()) {
+          if (sprite.isActive) {
+            hit = rect.collides((<Floor>sprite).getRectWorld());
+          }
+        }
         if (hit) {
           let translation: f.Vector3 = this.cmpTransform.local.translation;
           translation.y = rect.y;

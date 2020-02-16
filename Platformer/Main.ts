@@ -13,20 +13,28 @@ namespace Platformer {
   export let game: f.Node;
   export let level: f.Node;
   let hare: Hare;
-  let spaceTimer: number = 0;
+  let jumpTimer: number = 0;
+  let background: Background;
 
   function test(): void {
     let canvas: HTMLCanvasElement = document.querySelector("canvas");
-    let crc2: CanvasRenderingContext2D = canvas.getContext("2d");
-    let img: HTMLImageElement = document.querySelector("img");
+    let images: NodeListOf<HTMLImageElement> = document.querySelectorAll("img");
+    let hareImg: HTMLImageElement = images[0];
+    let backgroundImg: HTMLImageElement = images[1];
     let txtHare: f.TextureImage = new f.TextureImage();
-    let lastSpaceStatus: boolean = false;
-    txtHare.image = img;
+    let txtBackground: f.TextureImage = new f.TextureImage();
+    let lastjumpStatus: boolean = false;
+    txtHare.image = hareImg;
+    txtBackground.image = backgroundImg;
     Hare.generateSprites(txtHare);
 
     f.RenderManager.initialize(true, false);
     game = new f.Node("Game");
     hare = new Hare("Hare");
+    background = new Background(txtBackground);
+    background.cmpTransform.local.scaleY(50);
+    background.cmpTransform.local.scaleX(150);
+    game.appendChild(background);
     game.appendChild(hare);
     level = createLevel();
     game.appendChild(level);
@@ -47,21 +55,22 @@ namespace Platformer {
     f.Loop.start(f.LOOP_MODE.TIME_GAME, framerate);
 
     function update(_event: f.Eventƒ): void {
-      let spaceStatus = keysPressed[f.KEYBOARD_CODE.SPACE];
-      if (spaceStatus) {
-        spaceTimer++;
-      } else if (!lastSpaceStatus) {
-        spaceTimer = framerate;
+      let jumpStatus = keysPressed[f.KEYBOARD_CODE.W];
+      if (jumpStatus) {
+        jumpTimer++;
+      } else if (!lastjumpStatus) {
+        jumpTimer = framerate;
       }
-      lastSpaceStatus = spaceStatus;
+      lastjumpStatus = jumpStatus;
       if (hare.speed.y == 0) {
-        spaceTimer = 0;
+        jumpTimer = 0;
       }
+      let hareTranslation: f.Vector3 = hare.cmpTransform.local.translation;
+      let cameraTranslation: f.Vector3 = cmpCamera.pivot.translation;
+      cmpCamera.pivot.translateX(hareTranslation.x - cameraTranslation.x);
+      cmpCamera.pivot.translateY(hareTranslation.y - cameraTranslation.y);
       processInput();
       viewport.draw();
-
-      crc2.strokeRect(-1, -1, canvas.width / 2, canvas.height + 2);
-      crc2.strokeRect(-1, canvas.height / 2, canvas.width + 2, canvas.height);
     }
   }
 
@@ -70,23 +79,23 @@ namespace Platformer {
   }
 
   function processInput(): void {
+    let action: ACTION = ACTION.IDLE;
+    let direction: DIRECTION;
     if (keysPressed[f.KEYBOARD_CODE.A]) {
-      hare.act(ACTION.WALK, DIRECTION.LEFT);
-      return;
+      action = ACTION.WALK;
+      direction = DIRECTION.LEFT;
+    } else if (keysPressed[f.KEYBOARD_CODE.D]) {
+      action = ACTION.WALK;
+      direction = DIRECTION.RIGHT;
+    } else if (hare.speed.y != 0) {
+      action = ACTION.FALL;
     }
-    if (keysPressed[f.KEYBOARD_CODE.D]) {
-      hare.act(ACTION.WALK, DIRECTION.RIGHT);
-      return;
-    }
-    if (keysPressed[f.KEYBOARD_CODE.SPACE] && spaceTimer < framerate / 3) {
+
+    hare.act(action, direction);
+
+    if (keysPressed[f.KEYBOARD_CODE.W] && jumpTimer < framerate / 3) {
       hare.act(ACTION.JUMP);
-      return;
     }
-    if (hare.speed.y != 0) {
-      hare.act(ACTION.FALL);
-      return;
-    }
-    hare.act(ACTION.IDLE);
   }
   function createLevel(): f.Node {
     let level: f.Node = new f.Node("Level");
@@ -96,9 +105,23 @@ namespace Platformer {
 
     floor = new Floor();
     floor.cmpTransform.local.scaleY(0.2);
-    floor.cmpTransform.local.scaleX(2);
+    floor.cmpTransform.local.scaleX(1);
     floor.cmpTransform.local.translateY(0.15);
-    floor.cmpTransform.local.translateX(1.5);
+    floor.cmpTransform.local.translateX(1);
+    level.appendChild(floor);
+
+    floor = new Floor();
+    floor.cmpTransform.local.scaleY(0.2);
+    floor.cmpTransform.local.scaleX(1);
+    floor.cmpTransform.local.translateY(0.3);
+    floor.cmpTransform.local.translateX(2);
+    level.appendChild(floor);
+
+    floor = new Floor();
+    floor.cmpTransform.local.scaleY(0.2);
+    floor.cmpTransform.local.scaleX(1);
+    floor.cmpTransform.local.translateY(0.45);
+    floor.cmpTransform.local.translateX(3);
     level.appendChild(floor);
 
     return level;
