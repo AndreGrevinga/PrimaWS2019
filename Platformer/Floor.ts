@@ -3,21 +3,17 @@ namespace Platformer {
 
   export class Floor extends f.Node {
     private static mesh: f.MeshSprite = new f.MeshSprite();
-    private static coat: f.CoatTextured = new f.CoatTextured();
-    private static material: f.Material = new f.Material(
-      "Floor",
-      f.ShaderTexture,
-      Floor.coat
-    );
     private static readonly pivot: f.Matrix4x4 = f.Matrix4x4.TRANSLATION(
       f.Vector3.Y(-0.5)
     );
 
     public constructor(textureImage: f.TextureImage = new f.TextureImage()) {
       super("Floor");
-      Floor.coat.texture = textureImage;
+      let coat: f.CoatTextured = new f.CoatTextured();
+      coat.texture = textureImage;
+      let material: f.Material = new f.Material("Floor", f.ShaderTexture, coat);
       this.addComponent(new f.ComponentTransform());
-      this.addComponent(new f.ComponentMaterial(Floor.material));
+      this.addComponent(new f.ComponentMaterial(material));
       let cmpMesh: f.ComponentMesh = new f.ComponentMesh(Floor.mesh);
       cmpMesh.pivot = Floor.pivot;
       this.addComponent(cmpMesh);

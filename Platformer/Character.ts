@@ -15,8 +15,8 @@ namespace Platformer {
 
   export class Character extends f.Node {
     private static sprites: Sprite[];
-    private static speedMax: f.Vector2 = new f.Vector2(1.5, 5); // units per second
-    private static gravity: f.Vector2 = f.Vector2.Y(-3);
+    private static speedMax: f.Vector2 = new f.Vector2(3, 10); // units per second
+    private static gravity: f.Vector2 = f.Vector2.Y(-6);
     private framecounter: number = 0;
     public speed: f.Vector3 = f.Vector3.ZERO();
 
@@ -107,7 +107,7 @@ namespace Platformer {
           // console.log(direction);
           break;
         case ACTION.JUMP:
-          this.speed.y = 2;
+          this.speed.y = 3;
           break;
       }
       this.show(_action);
@@ -129,6 +129,7 @@ namespace Platformer {
     };
 
     private checkCollision(): void {
+      f.RenderManager.update();
       for (let floor of level.getChildren()) {
         let rect: f.Rectangle = (<Floor>floor).getRectWorld();
         let hit: boolean = false;

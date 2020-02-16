@@ -4,37 +4,39 @@ var Platformer;
     Platformer.f = FudgeCore;
     Platformer.Sprite = L14_ScrollerFoundation.Sprite;
     Platformer.NodeSprite = L14_ScrollerFoundation.NodeSprite;
-    window.addEventListener("load", test);
+    window.addEventListener("load", start);
     let keysPressed = {};
     const framerate = 60;
     let character;
     let jumpTimer = 0;
-    let background;
-    function test() {
+    let background = new Platformer.f.Node("Background");
+    function start() {
         let canvas = document.querySelector("canvas");
-        let images = document.querySelectorAll("img");
-        let characterImg = images[0];
-        let platformImg = images[2];
-        let txtCharacter = new Platformer.f.TextureImage();
+        let txtCharacter = loadTexture("character");
+        let txtPlatform = loadTexture("platform");
         let lastjumpStatus = false;
-        txtCharacter.image = characterImg;
+        let backgrounds = document.querySelectorAll("img");
         Platformer.Character.generateSprites(txtCharacter);
         Platformer.f.RenderManager.initialize(true, false);
         Platformer.game = new Platformer.f.Node("Game");
         character = new Platformer.Character("character");
-        //create the parallax background
-        let txtBackground = new Platformer.f.TextureImage();
-        let txtPlatform = new Platformer.f.TextureImage();
-        txtPlatform.image = platformImg;
-        let backgroundImg = images[1];
-        txtBackground.image = backgroundImg;
-        background = new Platformer.Background(txtBackground, 10);
-        background.cmpTransform.local.scaleY(18);
-        background.cmpTransform.local.scaleX(64);
-        Platformer.game.appendChild(background);
         Platformer.game.appendChild(character);
         Platformer.level = createLevel(txtPlatform);
         Platformer.game.appendChild(Platformer.level);
+        let distance = 20;
+        for (let i = 0; i < backgrounds.length; i++) {
+            let txt = new Platformer.f.TextureImage();
+            let backgroundImg = backgrounds[i];
+            if (backgroundImg.id == "paralaxBackground") {
+                txt.image = backgroundImg;
+                let bg = new Platformer.Background(txt, distance);
+                bg.cmpTransform.local.scaleY(9 * 3);
+                bg.cmpTransform.local.scaleX(16 * 3);
+                background.appendChild(bg);
+                distance = distance - 3;
+            }
+        }
+        Platformer.game.appendChild(background);
         let cmpCamera = new Platformer.f.ComponentCamera();
         cmpCamera.pivot.translateZ(15);
         cmpCamera.pivot.lookAt(Platformer.f.Vector3.ZERO());
@@ -46,6 +48,7 @@ var Platformer;
         document.addEventListener("keyup", handleKeyboard);
         Platformer.f.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, update);
         Platformer.f.Loop.start(Platformer.f.LOOP_MODE.TIME_GAME, framerate);
+        Platformer.Audio.play(Platformer.AUDIO.BACKGROUND);
         function update(_event) {
             let jumpStatus = keysPressed[Platformer.f.KEYBOARD_CODE.W];
             if (jumpStatus) {
@@ -65,6 +68,12 @@ var Platformer;
             processInput();
             viewport.draw();
         }
+    }
+    function loadTexture(_elementID) {
+        let image = (document.getElementById(_elementID));
+        let texture = new Platformer.f.TextureImage();
+        texture.image = image;
+        return texture;
     }
     function handleKeyboard(_event) {
         keysPressed[_event.code] = _event.type == "keydown";

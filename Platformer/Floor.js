@@ -5,9 +5,11 @@ var Platformer;
     class Floor extends f.Node {
         constructor(textureImage = new f.TextureImage()) {
             super("Floor");
-            Floor.coat.texture = textureImage;
+            let coat = new f.CoatTextured();
+            coat.texture = textureImage;
+            let material = new f.Material("Floor", f.ShaderTexture, coat);
             this.addComponent(new f.ComponentTransform());
-            this.addComponent(new f.ComponentMaterial(Floor.material));
+            this.addComponent(new f.ComponentMaterial(material));
             let cmpMesh = new f.ComponentMesh(Floor.mesh);
             cmpMesh.pivot = Floor.pivot;
             this.addComponent(cmpMesh);
@@ -26,8 +28,6 @@ var Platformer;
         }
     }
     Floor.mesh = new f.MeshSprite();
-    Floor.coat = new f.CoatTextured();
-    Floor.material = new f.Material("Floor", f.ShaderTexture, Floor.coat);
     Floor.pivot = f.Matrix4x4.TRANSLATION(f.Vector3.Y(-0.5));
     Platformer.Floor = Floor;
 })(Platformer || (Platformer = {}));

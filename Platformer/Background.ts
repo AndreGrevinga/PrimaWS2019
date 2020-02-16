@@ -3,21 +3,24 @@ namespace Platformer {
 
   export class Background extends f.Node {
     private static mesh: f.MeshSprite = new f.MeshSprite();
-    private static coat: f.CoatTextured = new f.CoatTextured();
-    private static pivot: f.Matrix4x4 = new f.Matrix4x4();
-    private static material: f.Material = new f.Material(
-      "Background",
-      f.ShaderTexture,
-      Background.coat
-    );
+
     public constructor(image: f.TextureImage, dist: number) {
-      super("Background");
+      super("Background" + dist.toString());
       this.addComponent(new f.ComponentTransform());
-      Background.coat.texture = image;
-      Background.pivot.translateZ(-dist);
-      this.addComponent(new f.ComponentMaterial(Background.material));
+      let coat: f.CoatTextured = new f.CoatTextured();
+      let pivot: f.Matrix4x4 = new f.Matrix4x4();
+      coat.texture = image;
+      pivot.translateZ(-dist);
+      pivot.translateY(0.2);
+      pivot.translateX(0.1);
+      let material: f.Material = new f.Material(
+        "Background",
+        f.ShaderTexture,
+        coat
+      );
+      this.addComponent(new f.ComponentMaterial(material));
       let cmpMesh: f.ComponentMesh = new f.ComponentMesh(Background.mesh);
-      cmpMesh.pivot = Background.pivot;
+      cmpMesh.pivot = pivot;
       this.addComponent(cmpMesh);
     }
   }

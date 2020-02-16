@@ -3,7 +3,7 @@ namespace Platformer {
   export import Sprite = L14_ScrollerFoundation.Sprite;
   export import NodeSprite = L14_ScrollerFoundation.NodeSprite;
 
-  window.addEventListener("load", test);
+  window.addEventListener("load", start);
 
   interface KeyPressed {
     [code: string]: boolean;
@@ -14,36 +14,41 @@ namespace Platformer {
   export let level: f.Node;
   let character: Character;
   let jumpTimer: number = 0;
-  let background: Background;
+  let background: f.Node = new f.Node("Background");
 
-  function test(): void {
+  function start(): void {
     let canvas: HTMLCanvasElement = document.querySelector("canvas");
-    let images: NodeListOf<HTMLImageElement> = document.querySelectorAll("img");
-    let characterImg: HTMLImageElement = images[0];
-    let platformImg: HTMLImageElement = images[2];
-    let txtCharacter: f.TextureImage = new f.TextureImage();
+    let txtCharacter: f.TextureImage = loadTexture("character");
+    let txtPlatform: f.TextureImage = loadTexture("platform");
     let lastjumpStatus: boolean = false;
-    txtCharacter.image = characterImg;
+
+    let backgrounds: NodeListOf<HTMLImageElement> = document.querySelectorAll(
+      "img"
+    );
     Character.generateSprites(txtCharacter);
 
     f.RenderManager.initialize(true, false);
     game = new f.Node("Game");
     character = new Character("character");
 
-    //create the parallax background
-    let txtBackground: f.TextureImage = new f.TextureImage();
-    let txtPlatform: f.TextureImage = new f.TextureImage();
-    txtPlatform.image = platformImg;
-    let backgroundImg: HTMLImageElement = images[1];
-    txtBackground.image = backgroundImg;
-    background = new Background(txtBackground, 10);
-    background.cmpTransform.local.scaleY(18);
-    background.cmpTransform.local.scaleX(64);
-    game.appendChild(background);
-
     game.appendChild(character);
     level = createLevel(txtPlatform);
     game.appendChild(level);
+
+    let distance = 20;
+    for (let i = 0; i < backgrounds.length; i++) {
+      let txt: f.TextureImage = new f.TextureImage();
+      let backgroundImg = backgrounds[i];
+      if (backgroundImg.id == "paralaxBackground") {
+        txt.image = backgroundImg;
+        let bg = new Background(txt, distance);
+        bg.cmpTransform.local.scaleY(9 * 3);
+        bg.cmpTransform.local.scaleX(16 * 3);
+        background.appendChild(bg);
+        distance = distance - 3;
+      }
+    }
+    game.appendChild(background);
 
     let cmpCamera: f.ComponentCamera = new f.ComponentCamera();
     cmpCamera.pivot.translateZ(15);
@@ -59,6 +64,7 @@ namespace Platformer {
 
     f.Loop.addEventListener(f.EVENT.LOOP_FRAME, update);
     f.Loop.start(f.LOOP_MODE.TIME_GAME, framerate);
+    Audio.play(AUDIO.BACKGROUND);
 
     function update(_event: f.Eventƒ): void {
       let jumpStatus = keysPressed[f.KEYBOARD_CODE.W];
@@ -81,6 +87,14 @@ namespace Platformer {
     }
   }
 
+  function loadTexture(_elementID: string): f.TextureImage {
+    let image: HTMLImageElement = <HTMLImageElement>(
+      document.getElementById(_elementID)
+    );
+    let texture: f.TextureImage = new f.TextureImage();
+    texture.image = image;
+    return texture;
+  }
   function handleKeyboard(_event: KeyboardEvent): void {
     keysPressed[_event.code] = _event.type == "keydown";
   }

@@ -75,12 +75,13 @@ var Platformer;
                     // console.log(direction);
                     break;
                 case ACTION.JUMP:
-                    this.speed.y = 2;
+                    this.speed.y = 3;
                     break;
             }
             this.show(_action);
         }
         checkCollision() {
+            f.RenderManager.update();
             for (let floor of Platformer.level.getChildren()) {
                 let rect = floor.getRectWorld();
                 let hit = false;
@@ -98,8 +99,8 @@ var Platformer;
             }
         }
     }
-    Character.speedMax = new f.Vector2(1.5, 5); // units per second
-    Character.gravity = f.Vector2.Y(-3);
+    Character.speedMax = new f.Vector2(3, 10); // units per second
+    Character.gravity = f.Vector2.Y(-6);
     Platformer.Character = Character;
 })(Platformer || (Platformer = {}));
 //# sourceMappingURL=Character.js.map
