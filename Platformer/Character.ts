@@ -13,18 +13,18 @@ namespace Platformer {
     RIGHT
   }
 
-  export class Hare extends f.Node {
+  export class Character extends f.Node {
     private static sprites: Sprite[];
     private static speedMax: f.Vector2 = new f.Vector2(1.5, 5); // units per second
     private static gravity: f.Vector2 = f.Vector2.Y(-3);
     private framecounter: number = 0;
     public speed: f.Vector3 = f.Vector3.ZERO();
 
-    constructor(_name: string = "Hare") {
+    constructor(_name: string = "Character") {
       super(_name);
       this.addComponent(new f.ComponentTransform());
 
-      for (let sprite of Hare.sprites) {
+      for (let sprite of Character.sprites) {
         let nodeSprite: NodeSprite = new NodeSprite(sprite.name, sprite);
         nodeSprite.activate(false);
 
@@ -44,50 +44,50 @@ namespace Platformer {
     }
 
     public static generateSprites(_txtImage: f.TextureImage): void {
-      Hare.sprites = [];
+      Character.sprites = [];
       let sprite: Sprite = new Sprite(ACTION.IDLE);
       sprite.generateByGrid(
         _txtImage,
-        f.Rectangle.GET(0, 0, 60, 80),
-        4,
+        f.Rectangle.GET(0, 0, 21, 35),
+        12,
         f.Vector2.ZERO(),
-        64,
+        32,
         f.ORIGIN2D.BOTTOMCENTER
       );
-      Hare.sprites.push(sprite);
+      Character.sprites.push(sprite);
 
       sprite = new Sprite(ACTION.WALK);
       sprite.generateByGrid(
         _txtImage,
-        f.Rectangle.GET(0, 90, 60, 80),
-        6,
+        f.Rectangle.GET(0, 79, 23, 33),
+        8,
         f.Vector2.ZERO(),
-        64,
+        32,
         f.ORIGIN2D.BOTTOMCENTER
       );
-      Hare.sprites.push(sprite);
+      Character.sprites.push(sprite);
 
       sprite = new Sprite(ACTION.JUMP);
       sprite.generateByGrid(
         _txtImage,
-        f.Rectangle.GET(180, 180, 60, 80),
-        3,
+        f.Rectangle.GET(0, 117, 19, 36),
+        1,
         f.Vector2.ZERO(),
-        64,
+        32,
         f.ORIGIN2D.BOTTOMCENTER
       );
-      Hare.sprites.push(sprite);
+      Character.sprites.push(sprite);
 
       sprite = new Sprite(ACTION.FALL);
       sprite.generateByGrid(
         _txtImage,
-        f.Rectangle.GET(360, 180, 60, 80),
-        1,
+        f.Rectangle.GET(0, 39, 22, 35),
+        2,
         f.Vector2.ZERO(),
-        64,
+        32,
         f.ORIGIN2D.BOTTOMCENTER
       );
-      Hare.sprites.push(sprite);
+      Character.sprites.push(sprite);
     }
 
     public show(_action: ACTION): void {
@@ -102,7 +102,7 @@ namespace Platformer {
           break;
         case ACTION.WALK:
           let direction: number = _direction == DIRECTION.RIGHT ? 1 : -1;
-          this.speed.x = Hare.speedMax.x; // * direction;
+          this.speed.x = Character.speedMax.x; // * direction;
           this.cmpTransform.local.rotation = f.Vector3.Y(90 - 90 * direction);
           // console.log(direction);
           break;
@@ -121,7 +121,7 @@ namespace Platformer {
       }
 
       let timeFrame: number = f.Loop.timeFrameGame / 1000;
-      this.speed.y += Hare.gravity.y * timeFrame;
+      this.speed.y += Character.gravity.y * timeFrame;
       let distance: f.Vector3 = f.Vector3.SCALE(this.speed, timeFrame);
       this.cmpTransform.local.translate(distance);
 

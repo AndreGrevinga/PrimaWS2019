@@ -15,8 +15,8 @@ var Platformer;
         DIRECTION[DIRECTION["LEFT"] = 0] = "LEFT";
         DIRECTION[DIRECTION["RIGHT"] = 1] = "RIGHT";
     })(DIRECTION = Platformer.DIRECTION || (Platformer.DIRECTION = {}));
-    class Hare extends f.Node {
-        constructor(_name = "Hare") {
+    class Character extends f.Node {
+        constructor(_name = "Character") {
             super(_name);
             this.framecounter = 0;
             this.speed = f.Vector3.ZERO();
@@ -27,13 +27,13 @@ var Platformer;
                     this.broadcastEvent(new CustomEvent("showNext"));
                 }
                 let timeFrame = f.Loop.timeFrameGame / 1000;
-                this.speed.y += Hare.gravity.y * timeFrame;
+                this.speed.y += Character.gravity.y * timeFrame;
                 let distance = f.Vector3.SCALE(this.speed, timeFrame);
                 this.cmpTransform.local.translate(distance);
                 this.checkCollision();
             };
             this.addComponent(new f.ComponentTransform());
-            for (let sprite of Hare.sprites) {
+            for (let sprite of Character.sprites) {
                 let nodeSprite = new Platformer.NodeSprite(sprite.name, sprite);
                 nodeSprite.activate(false);
                 nodeSprite.addEventListener("showNext", (_event) => {
@@ -45,19 +45,19 @@ var Platformer;
             f.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, this.update);
         }
         static generateSprites(_txtImage) {
-            Hare.sprites = [];
+            Character.sprites = [];
             let sprite = new Platformer.Sprite(ACTION.IDLE);
-            sprite.generateByGrid(_txtImage, f.Rectangle.GET(0, 0, 60, 80), 4, f.Vector2.ZERO(), 64, f.ORIGIN2D.BOTTOMCENTER);
-            Hare.sprites.push(sprite);
+            sprite.generateByGrid(_txtImage, f.Rectangle.GET(0, 0, 21, 35), 12, f.Vector2.ZERO(), 32, f.ORIGIN2D.BOTTOMCENTER);
+            Character.sprites.push(sprite);
             sprite = new Platformer.Sprite(ACTION.WALK);
-            sprite.generateByGrid(_txtImage, f.Rectangle.GET(0, 90, 60, 80), 6, f.Vector2.ZERO(), 64, f.ORIGIN2D.BOTTOMCENTER);
-            Hare.sprites.push(sprite);
+            sprite.generateByGrid(_txtImage, f.Rectangle.GET(0, 79, 23, 33), 8, f.Vector2.ZERO(), 32, f.ORIGIN2D.BOTTOMCENTER);
+            Character.sprites.push(sprite);
             sprite = new Platformer.Sprite(ACTION.JUMP);
-            sprite.generateByGrid(_txtImage, f.Rectangle.GET(180, 180, 60, 80), 3, f.Vector2.ZERO(), 64, f.ORIGIN2D.BOTTOMCENTER);
-            Hare.sprites.push(sprite);
+            sprite.generateByGrid(_txtImage, f.Rectangle.GET(0, 117, 19, 36), 1, f.Vector2.ZERO(), 32, f.ORIGIN2D.BOTTOMCENTER);
+            Character.sprites.push(sprite);
             sprite = new Platformer.Sprite(ACTION.FALL);
-            sprite.generateByGrid(_txtImage, f.Rectangle.GET(360, 180, 60, 80), 1, f.Vector2.ZERO(), 64, f.ORIGIN2D.BOTTOMCENTER);
-            Hare.sprites.push(sprite);
+            sprite.generateByGrid(_txtImage, f.Rectangle.GET(0, 39, 22, 35), 2, f.Vector2.ZERO(), 32, f.ORIGIN2D.BOTTOMCENTER);
+            Character.sprites.push(sprite);
         }
         show(_action) {
             for (let child of this.getChildren())
@@ -70,7 +70,7 @@ var Platformer;
                     break;
                 case ACTION.WALK:
                     let direction = _direction == DIRECTION.RIGHT ? 1 : -1;
-                    this.speed.x = Hare.speedMax.x; // * direction;
+                    this.speed.x = Character.speedMax.x; // * direction;
                     this.cmpTransform.local.rotation = f.Vector3.Y(90 - 90 * direction);
                     // console.log(direction);
                     break;
@@ -98,8 +98,8 @@ var Platformer;
             }
         }
     }
-    Hare.speedMax = new f.Vector2(1.5, 5); // units per second
-    Hare.gravity = f.Vector2.Y(-3);
-    Platformer.Hare = Hare;
+    Character.speedMax = new f.Vector2(1.5, 5); // units per second
+    Character.gravity = f.Vector2.Y(-3);
+    Platformer.Character = Character;
 })(Platformer || (Platformer = {}));
-//# sourceMappingURL=Hare.js.map
+//# sourceMappingURL=Character.js.map

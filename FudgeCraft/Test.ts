@@ -1,6 +1,6 @@
 namespace FudgeCraft {
   export function startTests(): void {
-    //    testGrid();
+    testGrid();
     testCombos();
   }
 

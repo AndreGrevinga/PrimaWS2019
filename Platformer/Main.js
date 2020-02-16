@@ -7,29 +7,33 @@ var Platformer;
     window.addEventListener("load", test);
     let keysPressed = {};
     const framerate = 60;
-    let hare;
+    let character;
     let jumpTimer = 0;
     let background;
     function test() {
         let canvas = document.querySelector("canvas");
         let images = document.querySelectorAll("img");
-        let hareImg = images[0];
-        let backgroundImg = images[1];
-        let txtHare = new Platformer.f.TextureImage();
-        let txtBackground = new Platformer.f.TextureImage();
+        let characterImg = images[0];
+        let platformImg = images[2];
+        let txtCharacter = new Platformer.f.TextureImage();
         let lastjumpStatus = false;
-        txtHare.image = hareImg;
-        txtBackground.image = backgroundImg;
-        Platformer.Hare.generateSprites(txtHare);
+        txtCharacter.image = characterImg;
+        Platformer.Character.generateSprites(txtCharacter);
         Platformer.f.RenderManager.initialize(true, false);
         Platformer.game = new Platformer.f.Node("Game");
-        hare = new Platformer.Hare("Hare");
-        background = new Platformer.Background(txtBackground);
-        background.cmpTransform.local.scaleY(50);
-        background.cmpTransform.local.scaleX(150);
+        character = new Platformer.Character("character");
+        //create the parallax background
+        let txtBackground = new Platformer.f.TextureImage();
+        let txtPlatform = new Platformer.f.TextureImage();
+        txtPlatform.image = platformImg;
+        let backgroundImg = images[1];
+        txtBackground.image = backgroundImg;
+        background = new Platformer.Background(txtBackground, 10);
+        background.cmpTransform.local.scaleY(18);
+        background.cmpTransform.local.scaleX(64);
         Platformer.game.appendChild(background);
-        Platformer.game.appendChild(hare);
-        Platformer.level = createLevel();
+        Platformer.game.appendChild(character);
+        Platformer.level = createLevel(txtPlatform);
         Platformer.game.appendChild(Platformer.level);
         let cmpCamera = new Platformer.f.ComponentCamera();
         cmpCamera.pivot.translateZ(15);
@@ -51,13 +55,13 @@ var Platformer;
                 jumpTimer = framerate;
             }
             lastjumpStatus = jumpStatus;
-            if (hare.speed.y == 0) {
+            if (character.speed.y == 0) {
                 jumpTimer = 0;
             }
-            let hareTranslation = hare.cmpTransform.local.translation;
+            let characterTranslation = character.cmpTransform.local.translation;
             let cameraTranslation = cmpCamera.pivot.translation;
-            cmpCamera.pivot.translateX(hareTranslation.x - cameraTranslation.x);
-            cmpCamera.pivot.translateY(hareTranslation.y - cameraTranslation.y);
+            cmpCamera.pivot.translateX(characterTranslation.x - cameraTranslation.x);
+            cmpCamera.pivot.translateY(characterTranslation.y - cameraTranslation.y);
             processInput();
             viewport.draw();
         }
@@ -76,36 +80,37 @@ var Platformer;
             action = Platformer.ACTION.WALK;
             direction = Platformer.DIRECTION.RIGHT;
         }
-        else if (hare.speed.y != 0) {
+        else if (character.speed.y != 0) {
             action = Platformer.ACTION.FALL;
         }
-        hare.act(action, direction);
+        character.act(action, direction);
         if (keysPressed[Platformer.f.KEYBOARD_CODE.W] && jumpTimer < framerate / 3) {
-            hare.act(Platformer.ACTION.JUMP);
+            character.act(Platformer.ACTION.JUMP);
         }
     }
-    function createLevel() {
+    function createLevel(texture) {
         let level = new Platformer.f.Node("Level");
-        let floor = new Platformer.Floor();
-        floor.cmpTransform.local.scaleY(0.2);
+        let floor = new Platformer.Floor(texture);
+        floor.cmpTransform.local.scaleY(0.4);
+        floor.cmpTransform.local.scaleX(2);
         level.appendChild(floor);
-        floor = new Platformer.Floor();
-        floor.cmpTransform.local.scaleY(0.2);
-        floor.cmpTransform.local.scaleX(1);
-        floor.cmpTransform.local.translateY(0.15);
-        floor.cmpTransform.local.translateX(1);
-        level.appendChild(floor);
-        floor = new Platformer.Floor();
-        floor.cmpTransform.local.scaleY(0.2);
-        floor.cmpTransform.local.scaleX(1);
+        floor = new Platformer.Floor(texture);
+        floor.cmpTransform.local.scaleY(0.4);
+        floor.cmpTransform.local.scaleX(2);
         floor.cmpTransform.local.translateY(0.3);
         floor.cmpTransform.local.translateX(2);
         level.appendChild(floor);
-        floor = new Platformer.Floor();
-        floor.cmpTransform.local.scaleY(0.2);
-        floor.cmpTransform.local.scaleX(1);
-        floor.cmpTransform.local.translateY(0.45);
-        floor.cmpTransform.local.translateX(3);
+        floor = new Platformer.Floor(texture);
+        floor.cmpTransform.local.scaleY(0.4);
+        floor.cmpTransform.local.scaleX(2);
+        floor.cmpTransform.local.translateY(0.6);
+        floor.cmpTransform.local.translateX(4);
+        level.appendChild(floor);
+        floor = new Platformer.Floor(texture);
+        floor.cmpTransform.local.scaleY(0.4);
+        floor.cmpTransform.local.scaleX(2);
+        floor.cmpTransform.local.translateY(0.9);
+        floor.cmpTransform.local.translateX(6);
         level.appendChild(floor);
         return level;
     }

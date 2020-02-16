@@ -2,7 +2,7 @@
 var FudgeCraft;
 (function (FudgeCraft) {
     function startTests() {
-        //    testGrid();
+        testGrid();
         testCombos();
     }
     FudgeCraft.startTests = startTests;
