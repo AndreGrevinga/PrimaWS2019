@@ -33,7 +33,7 @@ namespace Platformer {
     character = new Character("character");
 
     game.appendChild(character);
-    LevelLoader.generateLevel("/Platformer/Resources/Level.json");
+    LevelLoader.generateLevel("Resources/Level.json");
     game.appendChild(level);
 
     let distance: number = 20;

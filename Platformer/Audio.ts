@@ -2,8 +2,8 @@ namespace Platformer {
   import f = FudgeCore;
 
   export enum AUDIO {
-    BACKGROUND = "/Platformer/Resources/Sound/TropicalJungle.mp3",
-    MOVE = "/Platformer/Resources/Sound/move.wav"
+    BACKGROUND = "Resources/Sound/TropicalJungle.mp3",
+    MOVE = "Resources/Sound/move.wav"
   }
 
   export class Audio extends f.Node {
