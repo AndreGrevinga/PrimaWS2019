@@ -5,7 +5,7 @@ var Platformer;
     let AUDIO;
     (function (AUDIO) {
         AUDIO["BACKGROUND"] = "Resources/Sound/TropicalJungle.mp3";
-        AUDIO["MOVE"] = "Resources/Sound/Move.wav";
+        AUDIO["MOVE"] = "Resources/Sound/move.wav";
     })(AUDIO = Platformer.AUDIO || (Platformer.AUDIO = {}));
     class Audio extends f.Node {
         static start() {

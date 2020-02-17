@@ -19,7 +19,7 @@ namespace Platformer {
   function start(): void {
     let canvas: HTMLCanvasElement = document.querySelector("canvas");
     let txtCharacter: f.TextureImage = loadTexture("character");
-    let txtPlatform: f.TextureImage = loadTexture("platform");
+    //let txtPlatform: f.TextureImage = loadTexture("platform");
     let lastjumpStatus: boolean = false;
 
     let backgrounds: NodeListOf<HTMLImageElement> = document.querySelectorAll(
@@ -32,8 +32,8 @@ namespace Platformer {
     character = new Character("character");
 
     game.appendChild(character);
-    //LevelLoader.generateLevel("Resources/Level.json");
-    level = createLevel(txtPlatform);
+    LevelLoader.generateLevel("Resources/Level.json");
+    //level = createLevel(txtPlatform);
     game.appendChild(level);
 
     let distance: number = 20;

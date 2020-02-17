@@ -3,7 +3,7 @@ namespace Platformer {
 
   export enum AUDIO {
     BACKGROUND = "Resources/Sound/TropicalJungle.mp3",
-    MOVE = "Resources/Sound/Move.wav"
+    MOVE = "Resources/Sound/move.wav"
   }
 
   export class Audio extends f.Node {
