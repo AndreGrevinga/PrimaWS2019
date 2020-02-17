@@ -32,7 +32,6 @@ namespace Platformer {
 
     game.appendChild(character);
     LevelLoader.generateLevel("Resources/Level.json");
-    game.appendChild(level);
 
     let distance: number = 20;
     for (let i = 0; i < backgrounds.length; i++) {
