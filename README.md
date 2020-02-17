@@ -8,7 +8,6 @@
 
 [Quellcode](https://github.com/AndreGrevinga/PrimaWS2019/tree/master/Platformer)
 
-
 ## Abgabe Abschlussaufgabe
 
 | Nr | Bezeichnung           | Inhalt                                                                                                                                                                                                                                                                         |
