@@ -28,7 +28,7 @@ namespace Platformer {
   export class LevelLoader {
     public static generateLevel(_filename: string): void {
       let file: XMLHttpRequest = new XMLHttpRequest();
-      file.open("GET", "Level.json", false);
+      file.open("GET", _filename, false);
       file.send(null);
       let levelJSON: LevelJSON = JSON.parse(file.responseText);
       for (let object of levelJSON.objects) {
