@@ -21,7 +21,8 @@ var Platformer;
         Platformer.game = new Platformer.f.Node("Game");
         character = new Platformer.Character("character");
         Platformer.game.appendChild(character);
-        Platformer.level = createLevel(txtPlatform);
+        Platformer.LevelLoader.generateLevel("Resources/Level.json");
+        //level = createLevel(txtPlatform);
         Platformer.game.appendChild(Platformer.level);
         let distance = 20;
         for (let i = 0; i < backgrounds.length; i++) {

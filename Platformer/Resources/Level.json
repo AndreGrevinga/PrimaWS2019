@@ -1,0 +1,52 @@
+{
+  "objects": [
+    {
+      "type": "Platform",
+      "texture": "platform",
+      "translation": {
+        "x": 0,
+        "y": 0
+      },
+      "scale": {
+        "x": 2,
+        "y": 0.4
+      }
+    },
+    {
+      "type": "Platform",
+      "texture": "platform",
+      "translation": {
+        "x": 2,
+        "y": 0.3
+      },
+      "scale": {
+        "x": 2,
+        "y": 0.4
+      }
+    },
+    {
+      "type": "Platform",
+      "texture": "platform",
+      "translation": {
+        "x": 7.5,
+        "y": 5
+      },
+      "scale": {
+        "x": 2,
+        "y": 0.4
+      }
+    },
+    {
+      "type": "Platform",
+      "texture": "platform",
+      "translation": {
+        "x": 7.5,
+        "y": 5
+      },
+      "scale": {
+        "x": 2,
+        "y": 0.4
+      }
+    }
+  ]
+}
