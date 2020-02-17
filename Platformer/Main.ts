@@ -64,6 +64,7 @@ namespace Platformer {
 
     f.Loop.addEventListener(f.EVENT.LOOP_FRAME, update);
     f.Loop.start(f.LOOP_MODE.TIME_GAME, framerate);
+    Audio.start();
     Audio.play(AUDIO.BACKGROUND);
 
     function update(_event: f.Eventƒ): void {

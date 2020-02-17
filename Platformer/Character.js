@@ -72,7 +72,7 @@ var Platformer;
                     let direction = _direction == DIRECTION.RIGHT ? 1 : -1;
                     this.speed.x = Character.speedMax.x; // * direction;
                     this.cmpTransform.local.rotation = f.Vector3.Y(90 - 90 * direction);
-                    // console.log(direction);
+                    //Audio.play(AUDIO.MOVE);
                     break;
                 case ACTION.JUMP:
                     this.speed.y = 3;

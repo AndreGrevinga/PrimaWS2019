@@ -3,7 +3,7 @@ namespace Platformer {
 
   export enum AUDIO {
     BACKGROUND = "Resources/Sound/TropicalJungle.mp3",
-    MOVE = "Resources/Sound/Move.mp3"
+    MOVE = "Resources/Sound/Move.wav"
   }
 
   export class Audio extends f.Node {
@@ -30,6 +30,7 @@ namespace Platformer {
         AUDIO.MOVE,
         new f.ComponentAudio(await f.Audio.load(AUDIO.MOVE), false, false)
       );
+
       Audio.components.forEach(element => Audio.node.addComponent(element));
     }
   }

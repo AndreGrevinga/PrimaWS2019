@@ -11,7 +11,7 @@ namespace Platformer {
       let pivot: f.Matrix4x4 = new f.Matrix4x4();
       coat.texture = image;
       pivot.translateZ(-dist);
-      pivot.translateY(0.2);
+      pivot.translateY(0.17);
       pivot.translateX(0.1);
       let material: f.Material = new f.Material(
         "Background",

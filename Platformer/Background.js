@@ -10,7 +10,7 @@ var Platformer;
             let pivot = new f.Matrix4x4();
             coat.texture = image;
             pivot.translateZ(-dist);
-            pivot.translateY(0.2);
+            pivot.translateY(0.17);
             pivot.translateX(0.1);
             let material = new f.Material("Background", f.ShaderTexture, coat);
             this.addComponent(new f.ComponentMaterial(material));

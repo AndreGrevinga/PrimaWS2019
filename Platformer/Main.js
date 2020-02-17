@@ -48,6 +48,7 @@ var Platformer;
         document.addEventListener("keyup", handleKeyboard);
         Platformer.f.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, update);
         Platformer.f.Loop.start(Platformer.f.LOOP_MODE.TIME_GAME, framerate);
+        Platformer.Audio.start();
         Platformer.Audio.play(Platformer.AUDIO.BACKGROUND);
         function update(_event) {
             let jumpStatus = keysPressed[Platformer.f.KEYBOARD_CODE.W];
