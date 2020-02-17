@@ -23,6 +23,7 @@ var Platformer;
                     let image = (document.getElementById(_object.texture));
                     let texture = new Platformer.f.TextureImage();
                     texture.image = image;
+                    console.log(image.src);
                     let floor = new Platformer.Floor(texture);
                     floor.cmpTransform.local.translate(new Platformer.f.Vector3(floorJson.translation.x, floorJson.translation.y, 0));
                     floor.cmpTransform.local.scale(new Platformer.f.Vector3(floorJson.scale.x, floorJson.scale.y, 0));
