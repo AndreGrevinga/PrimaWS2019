@@ -16,7 +16,7 @@
       "type": "Floor",
       "texture": "platform",
       "translation": {
-        "x": 10,
+        "x": 12,
         "y": 0
       },
       "scale": {
@@ -29,7 +29,7 @@
       "texture": "platform",
       "translation": {
         "x": 0,
-        "y": 4
+        "y": 3
       },
       "scale": {
         "x": 5,
@@ -40,8 +40,8 @@
       "type": "Floor",
       "texture": "platform",
       "translation": {
-        "x": 10,
-        "y": 4
+        "x": 12,
+        "y": 3
       },
       "scale": {
         "x": 5,
@@ -54,18 +54,6 @@
       "translation": {
         "x": 6,
         "y": 1.5
-      },
-      "scale": {
-        "x": 2,
-        "y": 0.4
-      }
-    },
-    {
-      "type": "Floor",
-      "texture": "platform",
-      "translation": {
-        "x": 6,
-        "y": 3
       },
       "scale": {
         "x": 2,
