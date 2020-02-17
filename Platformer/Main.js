@@ -13,7 +13,6 @@ var Platformer;
     function start() {
         let canvas = document.querySelector("canvas");
         let txtCharacter = loadTexture("character");
-        //let txtPlatform: f.TextureImage = loadTexture("platform");
         let lastjumpStatus = false;
         let backgrounds = document.querySelectorAll("img");
         Platformer.Character.generateSprites(txtCharacter);
@@ -22,7 +21,6 @@ var Platformer;
         character = new Platformer.Character("character");
         Platformer.game.appendChild(character);
         Platformer.LevelLoader.generateLevel("Resources/Level.json");
-        //level = createLevel(txtPlatform);
         Platformer.game.appendChild(Platformer.level);
         let distance = 20;
         for (let i = 0; i < backgrounds.length; i++) {
@@ -98,32 +96,6 @@ var Platformer;
         if (keysPressed[Platformer.f.KEYBOARD_CODE.W] && jumpTimer < framerate / 3) {
             character.act(Platformer.ACTION.JUMP);
         }
-    }
-    function createLevel(texture) {
-        let level = new Platformer.f.Node("Level");
-        let floor = new Platformer.Floor(texture);
-        floor.cmpTransform.local.scaleY(0.4);
-        floor.cmpTransform.local.scaleX(2);
-        level.appendChild(floor);
-        floor = new Platformer.Floor(texture);
-        floor.cmpTransform.local.scaleY(0.4);
-        floor.cmpTransform.local.scaleX(2);
-        floor.cmpTransform.local.translateY(0.3);
-        floor.cmpTransform.local.translateX(2);
-        level.appendChild(floor);
-        floor = new Platformer.Floor(texture);
-        floor.cmpTransform.local.scaleY(0.4);
-        floor.cmpTransform.local.scaleX(2);
-        floor.cmpTransform.local.translateY(0.6);
-        floor.cmpTransform.local.translateX(4);
-        level.appendChild(floor);
-        floor = new Platformer.Floor(texture);
-        floor.cmpTransform.local.scaleY(0.4);
-        floor.cmpTransform.local.scaleX(2);
-        floor.cmpTransform.local.translateY(0.9);
-        floor.cmpTransform.local.translateX(6);
-        level.appendChild(floor);
-        return level;
     }
 })(Platformer || (Platformer = {}));
 //# sourceMappingURL=Main.js.map

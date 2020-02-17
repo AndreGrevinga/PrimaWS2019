@@ -19,7 +19,6 @@ namespace Platformer {
   function start(): void {
     let canvas: HTMLCanvasElement = document.querySelector("canvas");
     let txtCharacter: f.TextureImage = loadTexture("character");
-    //let txtPlatform: f.TextureImage = loadTexture("platform");
     let lastjumpStatus: boolean = false;
 
     let backgrounds: NodeListOf<HTMLImageElement> = document.querySelectorAll(
@@ -33,7 +32,6 @@ namespace Platformer {
 
     game.appendChild(character);
     LevelLoader.generateLevel("Resources/Level.json");
-    //level = createLevel(txtPlatform);
     game.appendChild(level);
 
     let distance: number = 20;
@@ -119,36 +117,5 @@ namespace Platformer {
     if (keysPressed[f.KEYBOARD_CODE.W] && jumpTimer < framerate / 3) {
       character.act(ACTION.JUMP);
     }
-  }
-
-  function createLevel(texture: f.TextureImage): f.Node {
-    let level: f.Node = new f.Node("Level");
-    let floor: Floor = new Floor(texture);
-    floor.cmpTransform.local.scaleY(0.4);
-    floor.cmpTransform.local.scaleX(2);
-    level.appendChild(floor);
-
-    floor = new Floor(texture);
-    floor.cmpTransform.local.scaleY(0.4);
-    floor.cmpTransform.local.scaleX(2);
-    floor.cmpTransform.local.translateY(0.3);
-    floor.cmpTransform.local.translateX(2);
-    level.appendChild(floor);
-
-    floor = new Floor(texture);
-    floor.cmpTransform.local.scaleY(0.4);
-    floor.cmpTransform.local.scaleX(2);
-    floor.cmpTransform.local.translateY(0.6);
-    floor.cmpTransform.local.translateX(4);
-    level.appendChild(floor);
-
-    floor = new Floor(texture);
-    floor.cmpTransform.local.scaleY(0.4);
-    floor.cmpTransform.local.scaleX(2);
-    floor.cmpTransform.local.translateY(0.9);
-    floor.cmpTransform.local.translateX(6);
-    level.appendChild(floor);
-
-    return level;
   }
 }
