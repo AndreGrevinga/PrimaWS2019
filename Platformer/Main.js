@@ -109,6 +109,9 @@ var Platformer;
         if (keysPressed[Platformer.f.KEYBOARD_CODE.W] && jumpTimer < framerate / 3) {
             character.act(Platformer.ACTION.JUMP);
         }
+        if (keysPressed[Platformer.f.KEYBOARD_CODE.E]) {
+            character.act(Platformer.ACTION.THROW);
+        }
     }
 })(Platformer || (Platformer = {}));
 //# sourceMappingURL=Main.js.map

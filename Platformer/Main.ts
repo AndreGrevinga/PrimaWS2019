@@ -129,5 +129,8 @@ namespace Platformer {
     if (keysPressed[f.KEYBOARD_CODE.W] && jumpTimer < framerate / 3) {
       character.act(ACTION.JUMP);
     }
+    if (keysPressed[f.KEYBOARD_CODE.E]) {
+      character.act(ACTION.THROW);
+    }
   }
 }

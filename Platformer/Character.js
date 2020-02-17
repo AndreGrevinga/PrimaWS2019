@@ -72,29 +72,37 @@ var Platformer;
                     let direction = _direction == DIRECTION.RIGHT ? 1 : -1;
                     this.speed.x = Character.speedMax.x; // * direction;
                     this.cmpTransform.local.rotation = f.Vector3.Y(90 - 90 * direction);
-                    //Audio.play(AUDIO.MOVE);
                     break;
                 case ACTION.JUMP:
                     this.speed.y = 3;
+                    break;
+                case ACTION.THROW:
+                    let grapple = new Platformer.Grapple(this.cmpTransform.local.translation, direction);
+                    Platformer.game.appendChild(grapple);
                     break;
             }
             this.show(_action);
         }
         checkCollision() {
             f.RenderManager.update();
+            let activeSprite = (this.getChildren().find(child => child.isActive));
+            if (activeSprite.getRectWorld().position.y < -1) {
+                this.speed = f.Vector3.ZERO();
+                this.cmpTransform.local.translation = f.Vector3.ZERO();
+            }
             for (let floor of Platformer.level.getChildren()) {
                 let rect = floor.getRectWorld();
-                let hit = false;
-                for (let sprite of this.getChildren()) {
-                    if (sprite.isActive) {
-                        hit = rect.collides(sprite.getRectWorld());
+                if (rect.collides(activeSprite.getRectWorld())) {
+                    if (this.speed.y >= 0) {
+                        this.cmpTransform.local.translateY(-0.1);
+                        this.speed.y = -0.1;
                     }
-                }
-                if (hit) {
-                    let translation = this.cmpTransform.local.translation;
-                    translation.y = rect.y;
-                    this.cmpTransform.local.translation = translation;
-                    this.speed.y = 0;
+                    else {
+                        let translation = this.cmpTransform.local.translation;
+                        translation.y = rect.y;
+                        this.cmpTransform.local.translation = translation;
+                        this.speed.y = 0;
+                    }
                 }
             }
         }

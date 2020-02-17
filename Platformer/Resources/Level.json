@@ -16,7 +16,7 @@
       "type": "Floor",
       "texture": "platform",
       "translation": {
-        "x": 6,
+        "x": 7,
         "y": 1.5
       },
       "scale": {
@@ -41,7 +41,7 @@
       "texture": "platform",
       "translation": {
         "x": 8,
-        "y": 3
+        "y": 4
       },
       "scale": {
         "x": 5,

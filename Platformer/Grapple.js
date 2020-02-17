@@ -3,7 +3,7 @@ var Platformer;
 (function (Platformer) {
     var f = FudgeCore;
     class Grapple extends f.Node {
-        constructor() {
+        constructor(_startPos, _direction) {
             super("Grapple");
             this.moveVector = new f.Vector3();
         }
