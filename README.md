@@ -1,5 +1,7 @@
 # PrimaWS2019
 
+[Designkonzept](https://github.com/AndreGrevinga/PrimaWS2019/blob/master/Abgabe/Designkonzept.pdf)
+
 ## Abgabe Abschlussaufgabe
 
 | Nr | Bezeichnung           | Inhalt                                                                                                                                                                                                                                                                         |
