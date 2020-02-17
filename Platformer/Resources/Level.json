@@ -1,7 +1,7 @@
 {
   "objects": [
     {
-      "type": "Platform",
+      "type": "Floor",
       "texture": "platform",
       "translation": {
         "x": 0,
@@ -13,7 +13,7 @@
       }
     },
     {
-      "type": "Platform",
+      "type": "Floor",
       "texture": "platform",
       "translation": {
         "x": 2,
@@ -25,7 +25,7 @@
       }
     },
     {
-      "type": "Platform",
+      "type": "Floor",
       "texture": "platform",
       "translation": {
         "x": 7.5,
@@ -37,7 +37,7 @@
       }
     },
     {
-      "type": "Platform",
+      "type": "Floor",
       "texture": "platform",
       "translation": {
         "x": 7.5,
