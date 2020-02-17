@@ -23,8 +23,8 @@ var Platformer;
         Platformer.game = new Platformer.f.Node("Game");
         character = new Platformer.Character("character");
         Platformer.game.appendChild(character);
-        Platformer.LevelLoader.generateLevel("/Platformer/Resources/Level.json");
         Platformer.game.appendChild(Platformer.level);
+        Platformer.LevelLoader.generateLevel("Level.json");
         let distance = 20;
         for (let i = 0; i < backgrounds.length; i++) {
             let txt = new Platformer.f.TextureImage();
