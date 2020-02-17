@@ -35,13 +35,13 @@ namespace Platformer {
     level = createLevel(txtPlatform);
     game.appendChild(level);
 
-    let distance = 20;
+    let distance: number = 20;
     for (let i = 0; i < backgrounds.length; i++) {
       let txt: f.TextureImage = new f.TextureImage();
-      let backgroundImg = backgrounds[i];
+      let backgroundImg: HTMLImageElement = backgrounds[i];
       if (backgroundImg.id == "paralaxBackground") {
         txt.image = backgroundImg;
-        let bg = new Background(txt, distance);
+        let bg: Background = new Background(txt, distance);
         bg.cmpTransform.local.scaleY(9 * 3);
         bg.cmpTransform.local.scaleX(16 * 3);
         background.appendChild(bg);
