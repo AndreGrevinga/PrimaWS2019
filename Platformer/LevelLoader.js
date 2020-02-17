@@ -13,6 +13,7 @@ var Platformer;
             file.send(null);
             let levelJSON = JSON.parse(file.responseText);
             for (let object of levelJSON.objects) {
+                console.log(object.type);
                 this.generateObject(object);
             }
         }
