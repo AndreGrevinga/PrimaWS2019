@@ -59,7 +59,7 @@ namespace Platformer {
       sprite = new Sprite(ACTION.WALK);
       sprite.generateByGrid(
         _txtImage,
-        f.Rectangle.GET(0, 79, 23, 33),
+        f.Rectangle.GET(0, 79, 23, 34),
         8,
         f.Vector2.ZERO(),
         32,

@@ -4,8 +4,8 @@ var Platformer;
     var f = FudgeCore;
     let AUDIO;
     (function (AUDIO) {
-        AUDIO["BACKGROUND"] = "Resources/Sound/TropicalJungle.mp3";
-        AUDIO["MOVE"] = "Resources/Sound/move.wav";
+        AUDIO["BACKGROUND"] = "/Platformer/Resources/Sound/TropicalJungle.mp3";
+        AUDIO["MOVE"] = "/Platformer/Resources/Sound/move.wav";
     })(AUDIO = Platformer.AUDIO || (Platformer.AUDIO = {}));
     class Audio extends f.Node {
         static start() {

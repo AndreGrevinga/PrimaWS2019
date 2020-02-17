@@ -32,7 +32,6 @@ namespace Platformer {
       file.send(null);
       let levelJSON: LevelJSON = JSON.parse(file.responseText);
       for (let object of levelJSON.objects) {
-        f.Debug.log(object.type);
         this.generateObject(object);
       }
     }
@@ -46,7 +45,6 @@ namespace Platformer {
           );
           let texture: f.TextureImage = new f.TextureImage();
           texture.image = image;
-          console.log(image.src);
           let floor: Floor = new Floor(texture);
           floor.cmpTransform.local.translate(
             new f.Vector3(floorJson.translation.x, floorJson.translation.y, 0)

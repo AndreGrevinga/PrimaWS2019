@@ -7,20 +7,23 @@ var Platformer;
     window.addEventListener("load", start);
     let keysPressed = {};
     const framerate = 60;
+    Platformer.level = new Platformer.f.Node("level");
     let character;
     let jumpTimer = 0;
     let background = new Platformer.f.Node("Background");
+    let gameIsStarted = false;
+    let musicIsPlaying = false;
     function start() {
         let canvas = document.querySelector("canvas");
         let txtCharacter = loadTexture("character");
         let lastjumpStatus = false;
         let backgrounds = document.querySelectorAll("img");
         Platformer.Character.generateSprites(txtCharacter);
-        Platformer.f.RenderManager.initialize(true, false);
+        Platformer.f.RenderManager.initialize(false, false);
         Platformer.game = new Platformer.f.Node("Game");
         character = new Platformer.Character("character");
         Platformer.game.appendChild(character);
-        Platformer.LevelLoader.generateLevel("Resources/Level.json");
+        Platformer.LevelLoader.generateLevel("/Platformer/Resources/Level.json");
         Platformer.game.appendChild(Platformer.level);
         let distance = 20;
         for (let i = 0; i < backgrounds.length; i++) {
@@ -43,12 +46,22 @@ var Platformer;
         let viewport = new Platformer.f.Viewport();
         viewport.initialize("Viewport", Platformer.game, cmpCamera, canvas);
         viewport.draw();
+        Platformer.Audio.start();
         document.addEventListener("keydown", handleKeyboard);
         document.addEventListener("keyup", handleKeyboard);
+        document.getElementById("playBtn").addEventListener("click", () => {
+            if (!gameIsStarted) {
+                Platformer.Audio.play(Platformer.AUDIO.BACKGROUND);
+                Platformer.f.Loop.start(Platformer.f.LOOP_MODE.TIME_GAME, framerate);
+                gameIsStarted = true;
+                musicIsPlaying = true;
+            }
+        });
+        document.getElementById("muteBtn").addEventListener("click", () => {
+            Platformer.Audio.play(Platformer.AUDIO.BACKGROUND, !musicIsPlaying);
+            musicIsPlaying = !musicIsPlaying;
+        });
         Platformer.f.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, update);
-        Platformer.f.Loop.start(Platformer.f.LOOP_MODE.TIME_GAME, framerate);
-        Platformer.Audio.start();
-        Platformer.Audio.play(Platformer.AUDIO.BACKGROUND);
         function update(_event) {
             let jumpStatus = keysPressed[Platformer.f.KEYBOARD_CODE.W];
             if (jumpStatus) {

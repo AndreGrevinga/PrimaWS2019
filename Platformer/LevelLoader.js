@@ -13,7 +13,6 @@ var Platformer;
             file.send(null);
             let levelJSON = JSON.parse(file.responseText);
             for (let object of levelJSON.objects) {
-                Platformer.f.Debug.log(object.type);
                 this.generateObject(object);
             }
         }
@@ -24,7 +23,6 @@ var Platformer;
                     let image = (document.getElementById(_object.texture));
                     let texture = new Platformer.f.TextureImage();
                     texture.image = image;
-                    console.log(image.src);
                     let floor = new Platformer.Floor(texture);
                     floor.cmpTransform.local.translate(new Platformer.f.Vector3(floorJson.translation.x, floorJson.translation.y, 0));
                     floor.cmpTransform.local.scale(new Platformer.f.Vector3(floorJson.scale.x, floorJson.scale.y, 0));

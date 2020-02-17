@@ -11,10 +11,12 @@ namespace Platformer {
   let keysPressed: KeyPressed = {};
   const framerate: number = 60;
   export let game: f.Node;
-  export let level: f.Node;
+  export let level: f.Node = new f.Node("level");
   let character: Character;
   let jumpTimer: number = 0;
   let background: f.Node = new f.Node("Background");
+  let gameIsStarted: boolean = false;
+  let musicIsPlaying: boolean = false;
 
   function start(): void {
     let canvas: HTMLCanvasElement = document.querySelector("canvas");
@@ -26,12 +28,12 @@ namespace Platformer {
     );
     Character.generateSprites(txtCharacter);
 
-    f.RenderManager.initialize(true, false);
+    f.RenderManager.initialize(false, false);
     game = new f.Node("Game");
     character = new Character("character");
 
     game.appendChild(character);
-    LevelLoader.generateLevel("Resources/Level.json");
+    LevelLoader.generateLevel("/Platformer/Resources/Level.json");
     game.appendChild(level);
 
     let distance: number = 20;
@@ -57,14 +59,24 @@ namespace Platformer {
     let viewport: f.Viewport = new f.Viewport();
     viewport.initialize("Viewport", game, cmpCamera, canvas);
     viewport.draw();
+    Audio.start();
 
     document.addEventListener("keydown", handleKeyboard);
     document.addEventListener("keyup", handleKeyboard);
+    document.getElementById("playBtn").addEventListener("click", () => {
+      if (!gameIsStarted) {
+        Audio.play(AUDIO.BACKGROUND);
+        f.Loop.start(f.LOOP_MODE.TIME_GAME, framerate);
+        gameIsStarted = true;
+        musicIsPlaying = true;
+      }
+    });
+    document.getElementById("muteBtn").addEventListener("click", () => {
+      Audio.play(AUDIO.BACKGROUND, !musicIsPlaying);
+      musicIsPlaying = !musicIsPlaying;
+    });
 
     f.Loop.addEventListener(f.EVENT.LOOP_FRAME, update);
-    f.Loop.start(f.LOOP_MODE.TIME_GAME, framerate);
-    Audio.start();
-    Audio.play(AUDIO.BACKGROUND);
 
     function update(_event: f.Eventƒ): void {
       let jumpStatus = keysPressed[f.KEYBOARD_CODE.W];

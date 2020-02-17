@@ -8,7 +8,7 @@
         "y": 0
       },
       "scale": {
-        "x": 2,
+        "x": 5,
         "y": 0.4
       }
     },
@@ -16,11 +16,11 @@
       "type": "Floor",
       "texture": "platform",
       "translation": {
-        "x": 2,
-        "y": 0.3
+        "x": 6,
+        "y": 1.5
       },
       "scale": {
-        "x": 2,
+        "x": 5,
         "y": 0.4
       }
     },
@@ -28,11 +28,11 @@
       "type": "Floor",
       "texture": "platform",
       "translation": {
-        "x": 7.5,
-        "y": 5
+        "x": 0,
+        "y": 3
       },
       "scale": {
-        "x": 2,
+        "x": 5,
         "y": 0.4
       }
     },
@@ -40,11 +40,11 @@
       "type": "Floor",
       "texture": "platform",
       "translation": {
-        "x": 7.5,
-        "y": 5
+        "x": 8,
+        "y": 3
       },
       "scale": {
-        "x": 2,
+        "x": 5,
         "y": 0.4
       }
     }

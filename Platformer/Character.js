@@ -50,7 +50,7 @@ var Platformer;
             sprite.generateByGrid(_txtImage, f.Rectangle.GET(0, 0, 21, 35), 12, f.Vector2.ZERO(), 32, f.ORIGIN2D.BOTTOMCENTER);
             Character.sprites.push(sprite);
             sprite = new Platformer.Sprite(ACTION.WALK);
-            sprite.generateByGrid(_txtImage, f.Rectangle.GET(0, 79, 23, 33), 8, f.Vector2.ZERO(), 32, f.ORIGIN2D.BOTTOMCENTER);
+            sprite.generateByGrid(_txtImage, f.Rectangle.GET(0, 79, 23, 34), 8, f.Vector2.ZERO(), 32, f.ORIGIN2D.BOTTOMCENTER);
             Character.sprites.push(sprite);
             sprite = new Platformer.Sprite(ACTION.JUMP);
             sprite.generateByGrid(_txtImage, f.Rectangle.GET(0, 117, 19, 36), 1, f.Vector2.ZERO(), 32, f.ORIGIN2D.BOTTOMCENTER);
