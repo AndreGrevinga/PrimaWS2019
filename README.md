@@ -2,6 +2,13 @@
 
 [Designkonzept](https://github.com/AndreGrevinga/PrimaWS2019/blob/master/Abgabe/Designkonzept.pdf)
 
+[Abgabe Archiv](https://github.com/AndreGrevinga/PrimaWS2019/blob/master/Abgabe/JungleFever.7z)
+
+[Lauffähiges Spiel](https://andregrevinga.github.io/PrimaWS2019/Platformer/index.html)
+
+[Quellcode](https://github.com/AndreGrevinga/PrimaWS2019/tree/master/Platformer)
+
+
 ## Abgabe Abschlussaufgabe
 
 | Nr | Bezeichnung           | Inhalt                                                                                                                                                                                                                                                                         |
