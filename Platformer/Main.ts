@@ -32,8 +32,8 @@ namespace Platformer {
     character = new Character("character");
 
     game.appendChild(character);
-    LevelLoader.generateLevel("Resources/Level.json");
-    //level = createLevel(txtPlatform);
+    //LevelLoader.generateLevel("Resources/Level.json");
+    level = createLevel(txtPlatform);
     game.appendChild(level);
 
     let distance: number = 20;
